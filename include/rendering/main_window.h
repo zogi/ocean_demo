@@ -11,12 +11,11 @@ class main_window {
 public:
     enum run_state { RUN_STATE_UNINITIALIZED, RUN_STATE_RUNNING, RUN_STATE_QUITTING };
 
-    main_window();
+    main_window(int width, int height, const char *title, int num_framebuffer_samples);
     ~main_window();
     main_window(const main_window&) = delete;
     main_window& operator=(const main_window&) = delete;
 
-    void init(int width, int height, const char *title, int num_framebuffer_samples);
     void process_events() { window.process_events(event_handler); }
     void swap_frame();
     void set_camera(scene::camera& camera);

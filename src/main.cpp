@@ -11,8 +11,7 @@ const float wind_y = 0.0f;
 
 int main(int argc, char *argv[])
 {
-    rendering::main_window main_window;
-    main_window.init(640, 480, "demo", 4);
+    rendering::main_window main_window(640, 480, "demo", 4);
 
     gpu::compute compute(main_window.get_graphics_context());
 

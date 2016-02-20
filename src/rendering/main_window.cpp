@@ -2,20 +2,15 @@
 
 namespace rendering {
 
-main_window::main_window()
-    : event_handler(*this), run_state(RUN_STATE_UNINITIALIZED)
+main_window::main_window(int width, int height, const char *title, int num_framebuffer_samples)
+    : event_handler(*this), run_state(RUN_STATE_RUNNING)
 {
+    window.init(width, height, title);
+    framebuffer.allocate(width, height, num_samples);
 }
 
 main_window::~main_window()
 {
-}
-
-void main_window::init(int width, int height, const char *title, int num_samples)
-{
-    window.init(width, height, title);
-    framebuffer.allocate(width, height, num_samples);
-    run_state = RUN_STATE_RUNNING;
 }
 
 void main_window::set_camera(scene::camera& camera)
