@@ -14,7 +14,6 @@ main_window::~main_window()
 void main_window::init(int width, int height, const char *title, int num_samples)
 {
     window.init(width, height, title);
-    gpu::graphics::init();
     framebuffer.allocate(width, height, num_samples);
     run_state = RUN_STATE_RUNNING;
 }

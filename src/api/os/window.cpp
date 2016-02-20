@@ -55,6 +55,8 @@ void window::init(int width, int height, const char * title)
     gl_context = SDL_GL_CreateContext(window_handle);
     SDL_CHECK(gl_context != nullptr);
 
+    gpu::graphics::init();
+
     SDL_GL_SetSwapInterval(1);
 }
 
