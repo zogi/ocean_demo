@@ -8,13 +8,11 @@ namespace ocean {
 
 class spectrum {
 public:
-    spectrum();
+    spectrum(math::real Lx, math::real Lz, int M, int N, math::real A, math::real l, math::real Wx, math::real Wz);
     ~spectrum();
     spectrum(const spectrum&) = delete;
     spectrum& operator=(const spectrum&) = delete;
 
-    void set_params(math::real Lx, math::real Lz, int M, int N, math::real A, math::real l, math::real Wx, math::real Wz);
-    // The client has to call set_params and before calling bake_params.
     void bake_params(gpu::compute *compute);
     // The client has to call bake before calling enqueue_generate.
     gpu::compute::event enqueue_generate(math::real t, gpu::compute::memory_object out, const gpu::compute::event_vector *wait_events = nullptr);

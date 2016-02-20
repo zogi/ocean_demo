@@ -12,25 +12,16 @@ using math::real;
 
 namespace ocean {
 
-spectrum::spectrum() : Lx(0), Lz(0), M(0), N(0), A(0), l(0), compute(nullptr)
+spectrum::spectrum(real Lx, real Lz, int M, int N, real A, real l, real Wx, real Wz)
+	: Lx(Lx), Lz(Lz), M(M), N(N), A(A), l(l), compute(nullptr)
 {
+    w_mag = sqrt(Wx * Wx + Wz * Wz);
+    w_x = Wx / w_mag;
+    w_z = Wz / w_mag;
 }
 
 spectrum::~spectrum()
 {
-}
-
-void spectrum::set_params(real Lx, real Lz, int M, int N, real A, real l, real Wx, real Wz)
-{
-    this->Lx = Lx;
-    this->Lz = Lz;
-    this->M = M;
-    this->N = N;
-    this->A = A;
-    this->l = l;
-    w_mag = sqrt(Wx * Wx + Wz * Wz);
-    w_x = Wx / w_mag;
-    w_z = Wz / w_mag;
 }
 
 void spectrum::bake_params(gpu::compute *compute)

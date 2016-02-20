@@ -17,8 +17,7 @@ int main(int argc, char *argv[])
 
     LOG("Initializing Tessendorf heightfield.\n");
     const int N = heightfield_size, M = heightfield_size;
-    ocean::spectrum ocean_spectrum;
-    ocean_spectrum.set_params(meters_per_unit, meters_per_unit, N, M, A, damp_length, wind_x, wind_y);
+    ocean::spectrum ocean_spectrum(meters_per_unit, meters_per_unit, N, M, A, damp_length, wind_x, wind_y);
     ocean_spectrum.bake_params(&compute);
 
     scene::ocean_scene ocean_scene;
