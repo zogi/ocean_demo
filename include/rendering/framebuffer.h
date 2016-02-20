@@ -12,7 +12,7 @@ public:
     multisample_framebuffer(const multisample_framebuffer&) = delete;
     multisample_framebuffer& operator=(const multisample_framebuffer&) = delete;
 
-    void resize(int width, int height);
+    void resize(int new_width, int new_height);
     void resolve_to_backbuffer();
 
 private:

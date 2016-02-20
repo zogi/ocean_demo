@@ -38,14 +38,14 @@ multisample_framebuffer::~multisample_framebuffer()
     glDeleteRenderbuffers(1, &depth_rb);
 }
 
-void multisample_framebuffer::resize(int width, int height)
+void multisample_framebuffer::resize(int new_width, int new_height)
 {
-    multisample_framebuffer new_fb(width, height, num_samples);
-    std::swap(this->width, new_fb.width);
-    std::swap(this->height, new_fb.height);
-    std::swap(this->fbo, new_fb.fbo);
-    std::swap(this->color_rb, new_fb.color_rb);
-    std::swap(this->depth_rb, new_fb.depth_rb);
+    multisample_framebuffer new_fb(new_width, new_height, num_samples);
+    std::swap(width, new_fb.width);
+    std::swap(height, new_fb.height);
+    std::swap(fbo, new_fb.fbo);
+    std::swap(color_rb, new_fb.color_rb);
+    std::swap(depth_rb, new_fb.depth_rb);
 }
 
 void multisample_framebuffer::resolve_to_backbuffer()
