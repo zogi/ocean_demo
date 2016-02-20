@@ -73,7 +73,7 @@ compute::compute(os::window::graphics_context graphics_context)
     c_queue = command_queue(c_context, c_device);
 }
 
-compute::program compute::create_program_from_file(const char * file_name)
+compute::program compute::create_program_from_file(const char *file_name)
 {
     auto source = util::read_file_contents(file_name);
     auto res = program(c_context, source, false);

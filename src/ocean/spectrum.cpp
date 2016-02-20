@@ -13,7 +13,7 @@ using math::real;
 namespace ocean {
 
 spectrum::spectrum(real Lx, real Lz, int M, int N, real A, real l, real Wx, real Wz)
-	: Lx(Lx), Lz(Lz), M(M), N(N), A(A), l(l), compute(nullptr)
+  : Lx(Lx), Lz(Lz), M(M), N(N), A(A), l(l), compute(nullptr)
 {
     w_mag = sqrt(Wx * Wx + Wz * Wz);
     w_x = Wx / w_mag;
