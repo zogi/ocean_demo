@@ -12,12 +12,11 @@ public:
     typedef os::window_size size;
     typedef SDL_GLContext graphics_context;
 
-    window() : window_handle(nullptr), gl_context(nullptr) {}
+    window(int width, int height, const char *title);
     ~window();
     window(const window&) = delete;
     window& operator=(const window&) = delete;
 
-    void init(int width, int height, const char *title);
     void swap_frame();
     inline window::size get_size() const;
     window::graphics_context get_graphics_context() const { return gl_context; }

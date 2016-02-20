@@ -36,13 +36,8 @@ public:
 
 } // namespace detail
 
-window::~window()
-{
-    SDL_GL_DeleteContext(gl_context);
-    SDL_DestroyWindow(window_handle);
-}
-
-void window::init(int width, int height, const char * title)
+window::window(int width, int height, const char *title)
+    : window_handle(nullptr), gl_context(nullptr)
 {
     static detail::window_api window_api;
 
@@ -58,6 +53,12 @@ void window::init(int width, int height, const char * title)
     gpu::graphics::init();
 
     SDL_GL_SetSwapInterval(1);
+}
+
+window::~window()
+{
+    SDL_GL_DeleteContext(gl_context);
+    SDL_DestroyWindow(window_handle);
 }
 
 } // namespace os
