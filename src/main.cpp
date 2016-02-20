@@ -2,26 +2,26 @@
 #include <scene/ocean_scene.h>
 #include <util/log.h>
 
-constexpr int heightfield_size = 512;
-const float meters_per_unit = 20.0f;
-const float damp_length = 0.25f;
-const float A = 1.0e-3f;
-const float wind_x = 15.0f;
-const float wind_y = 0.0f;
-
 int main(int argc, char *argv[])
 {
     rendering::main_window main_window(640, 480, "demo", 4);
 
     gpu::compute compute(main_window.get_graphics_context());
 
+    ocean::surface_params params;
+    params.tile_size_logical = math::vec3(10, 10, 10);
+    params.tile_size_physical = math::vec3(20, 20, 20);
+    params.grid_size = math::ivec2(512, 512);
+    params.amplitude_factor = 1.0e-3f;
+    params.wavelength_low_threshold = math::real(0.25);
+    params.set_wind_vector(math::vec2(15, 0));
+
     LOG("Initializing Tessendorf heightfield.\n");
-    const int N = heightfield_size, M = heightfield_size;
-    ocean::spectrum ocean_spectrum(meters_per_unit, meters_per_unit, N, M, A, damp_length, wind_x, wind_y);
+    ocean::spectrum ocean_spectrum(params);
     ocean_spectrum.bake_params(&compute);
 
     scene::ocean_scene ocean_scene;
-    ocean_scene.init(&ocean_spectrum, 1 / meters_per_unit);
+    ocean_scene.init(&ocean_spectrum, 1.0f / 20.0f);
     main_window.set_camera(ocean_scene.get_main_camera());
 
     LOG("Starting main loop.\n");

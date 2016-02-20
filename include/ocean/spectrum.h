@@ -3,12 +3,13 @@
 
 #include <vector>
 #include <api/gpu/compute.h>
+#include <ocean/surface_params.h>
 
 namespace ocean {
 
 class spectrum {
 public:
-    spectrum(math::real Lx, math::real Lz, int M, int N, math::real A, math::real l, math::real Wx, math::real Wz);
+    spectrum(const surface_params& params);
     ~spectrum();
     spectrum(const spectrum&) = delete;
     spectrum& operator=(const spectrum&) = delete;
@@ -16,8 +17,8 @@ public:
     void bake_params(gpu::compute *compute);
     // The client has to call bake before calling enqueue_generate.
     gpu::compute::event enqueue_generate(math::real time, gpu::compute::memory_object out, const gpu::compute::event_vector *wait_events = nullptr);
-    int get_N() const { return N; }
-    int get_M() const { return M; }
+    int get_N() const { return params.grid_size.x; }
+    int get_M() const { return params.grid_size.y; }
     gpu::compute *get_compute() const { return compute; }
 
 private:
@@ -27,12 +28,7 @@ private:
 
     static constexpr math::real g = math::real(9.80665);
 
-    math::real Lx, Lz;   // x and y dimensions (in meters).
-    int N, M;            // Number of samples along dimension x and y respectively.
-    math::real A;        // Amplitude multiplier constant.
-    math::real l;        // Suppress waves of wavelenght smaller than this (in meters).
-    math::real w_mag;    // Wind speed.
-    math::real w_x, w_z; // Wind direction.
+    surface_params params;
 
     gpu::compute *compute;
     gpu::compute::buffer initial_spectrum;

@@ -12,12 +12,9 @@ using math::real;
 
 namespace ocean {
 
-spectrum::spectrum(real Lx, real Lz, int M, int N, real A, real l, real Wx, real Wz)
-  : Lx(Lx), Lz(Lz), M(M), N(N), A(A), l(l), compute(nullptr)
+spectrum::spectrum(const surface_params& params)
+  : params(params), compute(nullptr)
 {
-    w_mag = sqrt(Wx * Wx + Wz * Wz);
-    w_x = Wx / w_mag;
-    w_z = Wz / w_mag;
 }
 
 spectrum::~spectrum()
@@ -39,7 +36,7 @@ gpu::compute::event spectrum::enqueue_generate(real time, gpu::compute::memory_o
     phase_shift_kernel.setArg(6, out);
 
     auto offset = gpu::compute::nd_range(0, 0);
-    auto global_size = gpu::compute::nd_range(size_t(N) / 2 + 1, size_t(M));
+    auto global_size = gpu::compute::nd_range(params.grid_size.x / 2 + 1, params.grid_size.y);
     auto local_size = gpu::compute::nd_range(1, 1);
     gpu::compute::event event;
     compute->get_command_queue().enqueueNDRangeKernel(phase_shift_kernel, offset, global_size, local_size, wait_events, &event);
@@ -49,15 +46,15 @@ gpu::compute::event spectrum::enqueue_generate(real time, gpu::compute::memory_o
 
 void spectrum::set_initial_spectrum()
 {
-    int size = (N / 2 + 1) * M * 2;
+    int size = (params.grid_size.x / 2 + 1) * params.grid_size.y * 2;
     std::vector<real> data(size);
     std::default_random_engine gen(0);
     std::normal_distribution<real> dist;
 
     // Generate the 2D Fourier coefficients of the ocean heightfield.
     int idx = 0;
-    for (int j = 0; j < M; ++j) {
-        for (int i = 0; i <= N / 2; ++i) {
+    for (int j = 0; j < params.grid_size.y; ++j) {
+        for (int i = 0; i <= params.grid_size.x / 2; ++i) {
             real p = phillips_spectrum(i, j);
             real mag = sqrt(p * real(0.5));
             data[idx++] = mag * dist(gen); // real part
@@ -75,27 +72,28 @@ void spectrum::load_phase_shift_kernel()
     auto program = compute->create_program_from_file("kernels/phase_shift.cl");
     phase_shift_kernel = gpu::compute::kernel(program, "phase_shift");
     phase_shift_kernel.setArg(0, initial_spectrum);
-    phase_shift_kernel.setArg(1, Lx);
-    phase_shift_kernel.setArg(2, Lz);
-    phase_shift_kernel.setArg(3, N);
-    phase_shift_kernel.setArg(4, M);
+    phase_shift_kernel.setArg(1, params.tile_size_physical.x);
+    phase_shift_kernel.setArg(2, params.tile_size_physical.z);
+    phase_shift_kernel.setArg(3, params.grid_size.x);
+    phase_shift_kernel.setArg(4, params.grid_size.y);
 }
 
 real spectrum::phillips_spectrum(int i, int j)
 {
+    int N = params.grid_size.x, M = params.grid_size.y;
     int ii = (i + N / 2) % N - N / 2;
     int jj = (j + M / 2) % M - M / 2;
-    real k_x = 2.0f * math::pi * real(ii) / Lx;
-    real k_z = 2.0f * math::pi * real(jj) / Lz;
+    real k_x = 2.0f * math::pi * real(ii) / params.tile_size_physical.x;
+    real k_z = 2.0f * math::pi * real(jj) / params.tile_size_physical.y;
     real k = sqrt(k_x * k_x + k_z * k_z);
     if (k < real(1e-5))
         return real(0);
-    real w_cos = (k_x * w_x + k_z * w_z) / k;
-    real L = w_mag * w_mag / g;
+    real w_cos = (k_x * params.wind_direction.x + k_z * params.wind_direction.y) / k;
+    real L = params.wind_speed * params.wind_speed / g;
     real k_sqr = k * k;
     real damp_large = exp(-real(1) / (k_sqr * L * L));
-    real damp_small = exp(-k_sqr * l * l);
-    return A * damp_large * damp_small * w_cos * w_cos / (k_sqr * k_sqr);
+    real damp_small = exp(-k_sqr * params.wavelength_low_threshold * params.wavelength_low_threshold);
+    return params.amplitude_factor * damp_large * damp_small * w_cos * w_cos / (k_sqr * k_sqr);
 }
 
 } // namespace ocean
