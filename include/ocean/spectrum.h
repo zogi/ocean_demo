@@ -15,7 +15,7 @@ public:
 
     void bake_params(gpu::compute *compute);
     // The client has to call bake before calling enqueue_generate.
-    gpu::compute::event enqueue_generate(math::real t, gpu::compute::memory_object out, const gpu::compute::event_vector *wait_events = nullptr);
+    gpu::compute::event enqueue_generate(math::real time, gpu::compute::memory_object out, const gpu::compute::event_vector *wait_events = nullptr);
     int get_N() const { return N; }
     int get_M() const { return M; }
     gpu::compute *get_compute() const { return compute; }

@@ -33,9 +33,9 @@ void spectrum::bake_params(gpu::compute *compute)
     load_phase_shift_kernel();
 }
 
-gpu::compute::event spectrum::enqueue_generate(real t, gpu::compute::memory_object out, const gpu::compute::event_vector *wait_events)
+gpu::compute::event spectrum::enqueue_generate(real time, gpu::compute::memory_object out, const gpu::compute::event_vector *wait_events)
 {
-    phase_shift_kernel.setArg(5, t);
+    phase_shift_kernel.setArg(5, time);
     phase_shift_kernel.setArg(6, out);
 
     auto offset = gpu::compute::nd_range(0, 0);
