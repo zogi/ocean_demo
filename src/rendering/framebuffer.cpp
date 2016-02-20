@@ -3,17 +3,9 @@
 
 namespace rendering {
 
-multisample_framebuffer::~multisample_framebuffer()
+multisample_framebuffer::multisample_framebuffer(int width, int height, int num_samples)
+    : width(width), height(height), num_samples(num_samples)
 {
-    release_resources();
-}
-
-void multisample_framebuffer::allocate(int width, int height, int num_samples)
-{
-    this->width = width;
-    this->height = height;
-    this->num_samples = num_samples;
-
     glGenFramebuffers(1, &fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
@@ -39,10 +31,21 @@ void multisample_framebuffer::allocate(int width, int height, int num_samples)
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 }
 
+multisample_framebuffer::~multisample_framebuffer()
+{
+    glDeleteFramebuffers(1, &fbo);
+    glDeleteRenderbuffers(1, &color_rb);
+    glDeleteRenderbuffers(1, &depth_rb);
+}
+
 void multisample_framebuffer::resize(int width, int height)
 {
-    release_resources();
-    allocate(width, height, num_samples);
+    multisample_framebuffer new_fb(width, height, num_samples);
+    std::swap(this->width, new_fb.width);
+    std::swap(this->height, new_fb.height);
+    std::swap(this->fbo, new_fb.fbo);
+    std::swap(this->color_rb, new_fb.color_rb);
+    std::swap(this->depth_rb, new_fb.depth_rb);
 }
 
 void multisample_framebuffer::resolve_to_backbuffer()
@@ -54,16 +57,6 @@ void multisample_framebuffer::resolve_to_backbuffer()
     glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-}
-
-void multisample_framebuffer::release_resources()
-{
-    if (fbo)
-        glDeleteFramebuffers(1, &fbo);
-    if (color_rb)
-        glDeleteRenderbuffers(1, &color_rb);
-    if (depth_rb)
-        glDeleteRenderbuffers(1, &depth_rb);
 }
 
 } // namespace rendering

@@ -3,9 +3,10 @@
 namespace rendering {
 
 main_window::main_window(int width, int height, const char *title, int num_framebuffer_samples)
-    : window(width, height, title), event_handler(*this), run_state(RUN_STATE_RUNNING)
+    : window(width, height, title), event_handler(*this),
+      framebuffer(width, height, num_framebuffer_samples),
+      run_state(RUN_STATE_RUNNING)
 {
-    framebuffer.allocate(width, height, num_samples);
 }
 
 main_window::~main_window()
