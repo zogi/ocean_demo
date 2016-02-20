@@ -1,0 +1,10 @@
+The demo expects a sky box image named sky.png here.
+The image should have a 4:3 width:height ratio.
+The expected layout of the sky box is as follows:
+ U
+LFRB
+ D
+U: Up, D: Down, L: Left, R: Right, F: Front, B: Back
+
+One possible sky box which looks good can be found here (as of 20-Feb-2016):
+http://mi.eng.cam.ac.uk/~agk34/resources/textures/sky/sky.png
