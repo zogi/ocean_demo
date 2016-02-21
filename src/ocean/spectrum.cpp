@@ -36,8 +36,8 @@ gpu::compute::event spectrum::enqueue_generate(gpu::compute::command_queue queue
 
 void spectrum::set_initial_spectrum(gpu::compute::context context)
 {
-    int size = (params.grid_size.x / 2 + 1) * params.grid_size.y * 2;
-    std::vector<real> data(size);
+    int elem_count = (params.grid_size.x / 2 + 1) * params.grid_size.y * 2;
+    std::vector<real> data(elem_count);
     std::default_random_engine gen(0);
     std::normal_distribution<real> dist;
 
@@ -53,8 +53,8 @@ void spectrum::set_initial_spectrum(gpu::compute::context context)
     }
 
     // Upload data to GPU.
-    int size_bytes = size * sizeof(real);
-    initial_spectrum = gpu::compute::buffer(context, cl_mem_flags(CL_MEM_READ_ONLY | CL_MEM_HOST_WRITE_ONLY | CL_MEM_COPY_HOST_PTR), size_bytes, data.data());
+    int size_bytes = elem_count * sizeof(real);
+    initial_spectrum = gpu::compute::buffer(context, data.begin(), data.end(), true);
 }
 
 void spectrum::load_phase_shift_kernel(gpu::compute::context context)
