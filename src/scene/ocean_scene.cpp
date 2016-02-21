@@ -15,7 +15,7 @@ constexpr gpu::graphics::texture_unit sky_cubemap_tex_unit = 2;
 } // unnamed namespace
 
 
-void ocean_scene::init(gpu::compute::command_queue queue, ocean::spectrum *ocean_spectrum, math::real units_per_meter)
+ocean_scene::ocean_scene(gpu::compute::command_queue queue, ocean::spectrum *ocean_spectrum, math::real units_per_meter)
 {
     main_camera.set_look_at(math::vec3(0, 1, 0));
     main_camera.set_position(math::vec3(0, 4, 6));
