@@ -14,7 +14,7 @@ namespace scene {
 
 class ocean_scene {
 public:
-    ocean_scene(gpu::compute::command_queue queue, const ocean::surface_params& params, math::real units_per_meter);
+    ocean_scene(gpu::compute::command_queue queue, const ocean::surface_params& params);
     ocean_scene(const ocean_scene&) = delete;
     ocean_scene& operator=(const ocean_scene&) = delete;
 

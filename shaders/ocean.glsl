@@ -17,10 +17,12 @@ layout(std140) uniform;
 //   displacement = displacement_tex_sample * max_displacement
 uniform sampler2D displacement_tex;
 uniform vec3 max_displacement = vec3(1, 1, 1);
+uniform vec3 units_per_meter;    // rendering units per displacement_map units (i.e. meters)
+uniform vec3 tile_size_logical;  // in rendering units
 
 vec3 get_displacement(vec2 p, vec2 dp_dx, vec2 dp_dy)
 {
-    return max_displacement * (2.0f * textureGrad(displacement_tex, p, dp_dx, dp_dy).xyz - 1.0f);
+    return units_per_meter * max_displacement * (2.0f * textureGrad(displacement_tex, p, dp_dx, dp_dy).xyz - 1.0f);
 }
 
 // Displacement mapping is only used up to a certain distance. Beyond that a noise-perturbed normal is used.
@@ -70,10 +72,6 @@ flat out int vertex_state_vs;
 
 // Screen-space projected grid
 uniform ivec2 grid_dim;
-
-// Ocean heightfield
-uniform float units_per_meter;
-uniform vec3 ocean_tile_size_units = vec3(10, 10, 10);
 
 // Vertex transform matrix
 uniform mat4 proj_view_world_transform;
@@ -138,10 +136,10 @@ void main()
     vec3 dmp_dy = units_per_pixel.y * dmp_dt;
 
     // Calculate displacement.
-    uv_vs = model_pos.xz / ocean_tile_size_units.xz;
-    duv_dx_vs = dmp_dx.xz / ocean_tile_size_units.xz;
-    duv_dy_vs = dmp_dy.xz / ocean_tile_size_units.xz;
-    displacement_vs = units_per_meter * ocean_tile_size_units * get_displacement(uv_vs, duv_dx_vs, duv_dy_vs);
+    uv_vs = model_pos.xz / tile_size_logical.xz;
+    duv_dx_vs = dmp_dx.xz / tile_size_logical.xz;
+    duv_dy_vs = dmp_dy.xz / tile_size_logical.xz;
+    displacement_vs = get_displacement(uv_vs, duv_dx_vs, duv_dy_vs);
 
     // Fade out displacement at the distance.
     float distance_to_camera = length(camera.model_transform.position - model_pos);
@@ -206,7 +204,6 @@ out vec3 color_out;
 
 uniform sampler2D d_height_tex; // partial derivatives of the heightfield
 uniform samplerCube sky_env;
-uniform float units_per_meter;
 uniform vec3 rf0_water = vec3(0.02f, 0.02f, 0.02f); // Real-Time Rendering 3rd ed. pg. 236
 uniform vec3 diffuse_water = 0.2f * vec3(0.04f, 0.16f, 0.47f);
 
@@ -229,11 +226,11 @@ void main()
     vec2 hdisp_00 = displacement_gs.xz;
     vec2 hdisp_10 = get_displacement(uv_gs + vec2(DERIV_EPS, 0.0f), duv_dx_gs, duv_dy_gs).xz;
     vec2 hdisp_01 = get_displacement(uv_gs + vec2(0.0f, DERIV_EPS), duv_dx_gs, duv_dy_gs).xz;
-    vec2 du_hdisp = units_per_meter * (hdisp_10 - hdisp_00) / DERIV_EPS;
-    vec2 dv_hdisp = units_per_meter * (hdisp_01 - hdisp_00) / DERIV_EPS;
+    vec2 du_hdisp = (hdisp_10 - hdisp_00) / (DERIV_EPS * tile_size_logical.xz);
+    vec2 dv_hdisp = (hdisp_01 - hdisp_00) / (DERIV_EPS * tile_size_logical.xz);
 
-    vec3 dx = vec3(1.0f, 0.0f, 0.0f) + max_displacement * vec3(du_hdisp.x, d_height.x, du_hdisp.y);
-    vec3 dz = vec3(0.0f, 0.0f, 1.0f) + max_displacement * vec3(dv_hdisp.x, d_height.y, dv_hdisp.y);
+    vec3 dx = vec3(1.0f, 0.0f, 0.0f) + vec3(du_hdisp.x, d_height.x, du_hdisp.y);
+    vec3 dz = vec3(0.0f, 0.0f, 1.0f) + vec3(dv_hdisp.x, d_height.y, dv_hdisp.y);
 
     // Fade out normal displacement with distance.
     float distance_to_camera = length(camera.model_transform.position - model_pos_gs);

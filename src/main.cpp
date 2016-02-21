@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     params.set_wind_vector(math::vec2(15, 0));
 
     LOG("Initializing Tessendorf heightfield.\n");
-    scene::ocean_scene ocean_scene(compute.get_command_queue(), params, 1.0f / 20.0f);
+    scene::ocean_scene ocean_scene(compute.get_command_queue(), params);
     main_window.attach_camera(ocean_scene.get_main_camera());
 
     LOG("Starting main loop.\n");
