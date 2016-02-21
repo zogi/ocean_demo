@@ -10,8 +10,6 @@
 // The model space vertex positions are calculated by the vertex shader.
 // In model space the ocean plane coincides with the xz plane.
 
-layout(std140) uniform;
-
 // Displacement mapping is used to render the ocean surface.
 // The displacement is encoded in the RGB channels of the displacement texture map as a fraction of max_displacement, so
 //   displacement = displacement_tex_sample * max_displacement
