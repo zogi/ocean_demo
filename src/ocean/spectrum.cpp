@@ -12,19 +12,15 @@ using math::real;
 
 namespace ocean {
 
-spectrum::spectrum(const surface_params& params)
+spectrum::spectrum(gpu::compute::context context, const surface_params& params)
   : params(params)
 {
+    set_initial_spectrum(context);
+    load_phase_shift_kernel(context);
 }
 
 spectrum::~spectrum()
 {
-}
-
-void spectrum::bake_params(gpu::compute::context context)
-{
-    set_initial_spectrum(context);
-    load_phase_shift_kernel(context);
 }
 
 gpu::compute::event spectrum::enqueue_generate(gpu::compute::command_queue queue, real time, gpu::compute::memory_object out, const gpu::compute::event_vector *wait_events)
