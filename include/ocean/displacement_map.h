@@ -30,7 +30,6 @@ private:
         rendering::texture_2d tex;
     };
 
-    void load_export_kernel();
     gpu::compute::event enqueue_export_kernel(const gpu::compute::event_vector *wait_events = nullptr);
 
     gpu::compute::command_queue queue;

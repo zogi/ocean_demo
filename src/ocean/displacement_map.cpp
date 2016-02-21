@@ -15,7 +15,16 @@ displacement_map::displacement_map(gpu::compute::command_queue queue, const surf
     displacement_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.grid_size, texture_format::TEXTURE_FORMAT_RGBA8),
     height_gradient_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.grid_size, texture_format::TEXTURE_FORMAT_RG16F)
 {
-    load_export_kernel();
+    // Load export kernel.
+    auto program = gpu::compute::create_program_from_file(queue.getInfo<CL_QUEUE_CONTEXT>(), "kernels/export_to_texture.cl");
+    export_kernel = gpu::compute::kernel(program, "export_to_texture");
+
+    // Set static export kernel parameters.
+    export_kernel.setArg(0, fft_buffer);
+    export_kernel.setArg(1, params.grid_size.x);
+    export_kernel.setArg(2, params.grid_size.y);
+    export_kernel.setArg(3, displacement_map.img);
+    export_kernel.setArg(4, height_gradient_map.img);
 }
 
 displacement_map::shared_texture::shared_texture(gpu::compute::context& context, math::ivec2 size, texture_format format)
@@ -36,18 +45,6 @@ void displacement_map::enqueue_generate(math::real time, const gpu::compute::eve
 
     displacement_map.tex.generate_mipmap();
     height_gradient_map.tex.generate_mipmap();
-}
-
-void displacement_map::load_export_kernel()
-{
-    auto program = gpu::compute::create_program_from_file(queue.getInfo<CL_QUEUE_CONTEXT>(), "kernels/export_to_texture.cl");
-    export_kernel = gpu::compute::kernel(program, "export_to_texture");
-
-    export_kernel.setArg(0, fft_buffer);
-    export_kernel.setArg(1, wave_spectrum.get_N());
-    export_kernel.setArg(2, wave_spectrum.get_M());
-    export_kernel.setArg(3, displacement_map.img);
-    export_kernel.setArg(4, height_gradient_map.img);
 }
 
 gpu::compute::event displacement_map::enqueue_export_kernel(const gpu::compute::event_vector *wait_events)
