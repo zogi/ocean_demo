@@ -7,10 +7,6 @@
 
 namespace ocean {
 
-displacement_map::~displacement_map()
-{
-}
-
 displacement_map::displacement_map(gpu::compute::command_queue queue, const surface_params& params)
   : wave_spectrum(queue.getInfo<CL_QUEUE_CONTEXT>(), params)
 {

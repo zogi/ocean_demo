@@ -14,7 +14,6 @@ class displacement_map {
 public:
 
     displacement_map(gpu::compute::command_queue queue, const surface_params& params);
-    ~displacement_map();
     displacement_map(const displacement_map&) = delete;
     displacement_map& operator=(const displacement_map&) = delete;
 

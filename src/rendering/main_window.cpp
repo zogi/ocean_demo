@@ -9,10 +9,6 @@ main_window::main_window(int width, int height, const char *title, int num_frame
 {
 }
 
-main_window::~main_window()
-{
-}
-
 void main_window::set_camera(scene::camera& camera)
 {
     main_camera_controller.set_target(&camera);

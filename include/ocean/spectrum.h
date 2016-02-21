@@ -10,7 +10,6 @@ namespace ocean {
 class spectrum {
 public:
     spectrum(gpu::compute::context context, const surface_params& params);
-    ~spectrum();
     spectrum(const spectrum&) = delete;
     spectrum& operator=(const spectrum&) = delete;
 
