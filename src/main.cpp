@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     ocean::spectrum ocean_spectrum(compute.get_context(), params);
 
     scene::ocean_scene ocean_scene;
-    ocean_scene.init(&compute, &ocean_spectrum, 1.0f / 20.0f);
+    ocean_scene.init(compute.get_command_queue(), &ocean_spectrum, 1.0f / 20.0f);
     main_window.set_camera(ocean_scene.get_main_camera());
 
     LOG("Starting main loop.\n");

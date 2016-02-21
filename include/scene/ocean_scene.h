@@ -17,7 +17,7 @@ public:
     ocean_scene(const ocean_scene&) = delete;
     ocean_scene& operator=(const ocean_scene&) = delete;
 
-    void init(gpu::compute *compute, ocean::spectrum *ocean_spectrum, math::real units_per_meter);
+    void init(gpu::compute::command_queue queue, ocean::spectrum *ocean_spectrum, math::real units_per_meter);
     void render();
     camera& get_main_camera() { return main_camera; }
     const camera& get_main_camera() const { return main_camera; }
