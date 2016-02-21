@@ -17,6 +17,7 @@ public:
     displacement_map(const displacement_map&) = delete;
     displacement_map& operator=(const displacement_map&) = delete;
 
+    // Generates displacement map and height gradient map to textures.
     void enqueue_generate(math::real time, const gpu::compute::event_vector *wait_events = nullptr);
     void bind_displacement_texture(gpu::graphics::texture_unit tex_unit) { displacement_map.tex.bind(tex_unit); }
     void bind_height_gradient_texture(gpu::graphics::texture_unit tex_unit) { height_gradient_map.tex.bind(tex_unit); }
