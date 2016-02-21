@@ -1,4 +1,4 @@
-#include <ocean/displacement_map.h>
+#include <ocean/surface_geometry.h>
 
 #include <util/error.h>
 #include <util/util.h>
@@ -7,7 +7,7 @@ namespace ocean {
 
 #define N_FFT_BATCHES 5
 
-displacement_map::displacement_map(gpu::compute::command_queue queue, const surface_params& params)
+surface_geometry::surface_geometry(gpu::compute::command_queue queue, const surface_params& params)
   : queue(queue),
     wave_spectrum(queue.getInfo<CL_QUEUE_CONTEXT>(), params),
     fft_algorithm(queue, params.grid_size, N_FFT_BATCHES),
@@ -27,7 +27,7 @@ displacement_map::displacement_map(gpu::compute::command_queue queue, const surf
     export_kernel.setArg(4, height_gradient_map.img);
 }
 
-displacement_map::shared_texture::shared_texture(gpu::compute::context& context, math::ivec2 size, texture_format format)
+surface_geometry::shared_texture::shared_texture(gpu::compute::context& context, math::ivec2 size, texture_format format)
 {
     tex.init(size.x, size.y, format);
     tex.set_max_anisotropy(2);
@@ -35,7 +35,7 @@ displacement_map::shared_texture::shared_texture(gpu::compute::context& context,
     tex.generate_mipmap();
 }
 
-void displacement_map::enqueue_generate(math::real time, const gpu::compute::event_vector *wait_events)
+void surface_geometry::enqueue_generate(math::real time, const gpu::compute::event_vector *wait_events)
 {
     gpu::compute::event event;
     event = wave_spectrum.enqueue_generate(queue, time, fft_buffer, wait_events);
@@ -47,7 +47,7 @@ void displacement_map::enqueue_generate(math::real time, const gpu::compute::eve
     height_gradient_map.tex.generate_mipmap();
 }
 
-gpu::compute::event displacement_map::enqueue_export_kernel(const gpu::compute::event_vector *wait_events)
+gpu::compute::event surface_geometry::enqueue_export_kernel(const gpu::compute::event_vector *wait_events)
 {
     gpu::compute::event event;
     std::vector<gpu::compute::memory_object> gl_objects = { displacement_map.img, height_gradient_map.img };

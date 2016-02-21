@@ -1,5 +1,5 @@
-#ifndef __DISPLACEMENT_MAP_H_GUARD
-#define __DISPLACEMENT_MAP_H_GUARD
+#ifndef __SURFACE_GEOMETRY_H_GUARD
+#define __SURFACE_GEOMETRY_H_GUARD
 
 #include <api/gpu/compute.h>
 #include <api/gpu/fft.h>
@@ -10,12 +10,12 @@
 
 namespace ocean {
 
-class displacement_map {
+class surface_geometry {
 public:
 
-    displacement_map(gpu::compute::command_queue queue, const surface_params& params);
-    displacement_map(const displacement_map&) = delete;
-    displacement_map& operator=(const displacement_map&) = delete;
+    surface_geometry(gpu::compute::command_queue queue, const surface_params& params);
+    surface_geometry(const surface_geometry&) = delete;
+    surface_geometry& operator=(const surface_geometry&) = delete;
 
     // Generates displacement map and height gradient map to textures.
     void enqueue_generate(math::real time, const gpu::compute::event_vector *wait_events = nullptr);
@@ -43,4 +43,4 @@ private:
 
 } // namespace ocean
 
-#endif // !__DISPLACEMENT_MAP_H_GUARD
+#endif // !__SURFACE_GEOMETRY_H_GUARD

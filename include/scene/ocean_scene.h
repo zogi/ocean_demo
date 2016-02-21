@@ -2,7 +2,7 @@
 #define __OCEAN_SCENE_H_GUARD
 
 #include <api/math.h>
-#include <ocean/displacement_map.h>
+#include <ocean/surface_geometry.h>
 #include <ocean/spectrum.h>
 #include <ocean/surface_params.h>
 #include <rendering/quad.h>
@@ -27,7 +27,7 @@ private:
     rendering::quad unit_quad;
 
     rendering::shader_effect ocean_effect;
-    ocean::displacement_map ocean_surface;
+    ocean::surface_geometry ocean_surface;
 
     rendering::shader_effect sky_effect;
     rendering::cubemap sky_env;
