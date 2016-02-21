@@ -5,19 +5,19 @@
 
 namespace ocean {
 
+#define N_FFT_BATCHES 5
+
 displacement_map::displacement_map(gpu::compute::command_queue queue, const surface_params& params)
   : queue(queue),
     wave_spectrum(queue.getInfo<CL_QUEUE_CONTEXT>(), params),
+    fft_algorithm(queue, params.grid_size, N_FFT_BATCHES),
     displacement_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.grid_size, texture_format::TEXTURE_FORMAT_RGBA8),
     height_gradient_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.grid_size, texture_format::TEXTURE_FORMAT_RG16F)
 {
     int N = wave_spectrum.get_N();
     int M = wave_spectrum.get_M();
     auto context = queue.getInfo<CL_QUEUE_CONTEXT>();
-
-    const size_t n_fft_batches = 5;
-    fft_algorithm.create_plan(queue, N, M, n_fft_batches);
-    size_t buf_size_bytes = n_fft_batches * (N + 2) * M * sizeof(float);
+    size_t buf_size_bytes = N_FFT_BATCHES * (N + 2) * M * sizeof(float);
     fft_buffer = gpu::compute::buffer(context, CL_MEM_READ_WRITE, buf_size_bytes);
 
     load_export_kernel();
