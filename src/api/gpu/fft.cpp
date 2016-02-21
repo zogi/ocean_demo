@@ -54,7 +54,7 @@ template <> struct clfft_precision<double> { static constexpr auto value = CLFFT
 
 } // namespace detail
 
-ifft2d_hermitian_inplace::ifft2d_hermitian_inplace() : fft_plan(0), compute(nullptr)
+ifft2d_hermitian_inplace::ifft2d_hermitian_inplace() : fft_plan(0)
 {
     static detail::fft_api fft_api;
 }
@@ -64,18 +64,15 @@ ifft2d_hermitian_inplace::~ifft2d_hermitian_inplace()
     destroy_plan();
 }
 
-void ifft2d_hermitian_inplace::create_plan(size_t N, size_t M, size_t num_batches, gpu::compute *compute)
+void ifft2d_hermitian_inplace::create_plan(gpu::compute::command_queue queue, size_t N, size_t M, size_t num_batches)
 {
-    assert(compute);
-    this->compute = compute;
-
     size_t lenghts[] = { N, M };
     size_t in_stride[] = { 1, N / 2 + 1 };
     size_t out_stride[] = { 1, N + 2 };
 
     if (!fft_plan) destroy_plan();
 
-    auto context = compute->get_context();
+    auto context = queue.getInfo<CL_QUEUE_CONTEXT>();
     CLFFT_CHECK(clfftCreateDefaultPlan(&fft_plan, context(), CLFFT_2D, lenghts));
     CLFFT_CHECK(clfftSetPlanBatchSize(fft_plan, num_batches));
     CLFFT_CHECK(clfftSetPlanPrecision(fft_plan, detail::clfft_precision<math::real>::value));
@@ -86,24 +83,21 @@ void ifft2d_hermitian_inplace::create_plan(size_t N, size_t M, size_t num_batche
     CLFFT_CHECK(clfftSetPlanScale(fft_plan, CLFFT_BACKWARD, cl_float(1)));
     CLFFT_CHECK(clfftSetPlanDistance(fft_plan, M * (N / 2 + 1), M * (N + 2)));
 
-    auto command_queue = compute->get_command_queue();
-    CLFFT_CHECK(clfftBakePlan(fft_plan, 1, &command_queue(), nullptr, nullptr));
+    CLFFT_CHECK(clfftBakePlan(fft_plan, 1, &queue(), nullptr, nullptr));
 
     size_t tmp_sz;
     CLFFT_CHECK(clfftGetTmpBufSize(fft_plan, &tmp_sz));
-    tmp_buf = compute->create_buffer(CL_MEM_READ_WRITE, tmp_sz);
+    tmp_buf = gpu::compute::buffer(context, CL_MEM_READ_WRITE, tmp_sz);
 }
 
-gpu::compute::event ifft2d_hermitian_inplace::enqueue_transform(gpu::compute::memory_object buffer, gpu::compute::event_vector *wait_events)
+gpu::compute::event ifft2d_hermitian_inplace::enqueue_transform(gpu::compute::command_queue queue, gpu::compute::memory_object buffer, gpu::compute::event_vector *wait_events)
 {
     // cl::Event is just a wrapper around cl_event. In memory they should match exactly.
     const cl_event *cl_wait_events = wait_events ? reinterpret_cast<cl_event*>(wait_events->data()) : nullptr;
     cl_uint num_wait_events = wait_events ? static_cast<cl_uint>(wait_events->size()) : 0;
 
-    auto command_queue = compute->get_command_queue();
-
     cl_event res_event;
-    CLFFT_CHECK(clfftEnqueueTransform(fft_plan, CLFFT_BACKWARD, 1, &command_queue(),
+    CLFFT_CHECK(clfftEnqueueTransform(fft_plan, CLFFT_BACKWARD, 1, &queue(),
                                       num_wait_events, cl_wait_events,
                                       &res_event, &buffer(), nullptr, tmp_buf()));
     return cl::Event(res_event);

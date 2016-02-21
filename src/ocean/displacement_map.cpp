@@ -21,7 +21,7 @@ void displacement_map::set_spectrum(gpu::compute *compute, spectrum *wave_spectr
     int M = wave_spectrum->get_M();
 
     const size_t n_fft_batches = 5;
-    fft_algorithm.create_plan(N, M, n_fft_batches, compute);
+    fft_algorithm.create_plan(compute->get_command_queue(), N, M, n_fft_batches);
     size_t buf_size_bytes = n_fft_batches * (N + 2) * M * sizeof(float);
     fft_buffer = compute->create_buffer(CL_MEM_READ_WRITE, buf_size_bytes);
 
@@ -43,7 +43,7 @@ void displacement_map::enqueue_generate(math::real time, const gpu::compute::eve
 {
     gpu::compute::event event;
     event = wave_spectrum->enqueue_generate(compute->get_command_queue(), time, fft_buffer, wait_events);
-    event = fft_algorithm.enqueue_transform(fft_buffer, &gpu::compute::event_vector({ event }));
+    event = fft_algorithm.enqueue_transform(compute->get_command_queue(), fft_buffer, &gpu::compute::event_vector({ event }));
     event = enqueue_export_kernel(&gpu::compute::event_vector({ event }));
     event.wait();
 
