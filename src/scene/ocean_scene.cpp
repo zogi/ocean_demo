@@ -24,7 +24,8 @@ ocean_scene::ocean_scene(gpu::compute::command_queue queue, const ocean::surface
     unit_quad.init();
 
     // Ocean
-    ocean_surface.bind_textures(ocean_displacement_tex_unit, ocean_height_deriv_tex_unit);
+    ocean_surface.bind_displacement_texture(ocean_displacement_tex_unit);
+    ocean_surface.bind_height_gradient_texture(ocean_height_deriv_tex_unit);
 
     ocean_effect.load_shaders("shaders/ocean.glsl", VERTEX | GEOMETRY | FRAGMENT);
     ocean_effect.use();

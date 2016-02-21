@@ -18,7 +18,8 @@ public:
     displacement_map& operator=(const displacement_map&) = delete;
 
     void enqueue_generate(math::real time, const gpu::compute::event_vector *wait_events = nullptr);
-    void bind_textures(gpu::graphics::texture_unit displacement_tex_unit, gpu::graphics::texture_unit height_gradient_tex_unit);
+    void bind_displacement_texture(gpu::graphics::texture_unit tex_unit) { displacement.tex.bind(tex_unit); }
+    void bind_height_gradient_texture(gpu::graphics::texture_unit tex_unit) { height_gradient.tex.bind(tex_unit); }
 
 private:
     typedef rendering::texture_2d::texture_format texture_format;
@@ -39,12 +40,6 @@ private:
     gpu::compute::kernel export_kernel;
     shared_texture displacement, height_gradient;
 };
-
-inline void displacement_map::bind_textures(gpu::graphics::texture_unit displacement_tex_unit, gpu::graphics::texture_unit height_gradient_tex_unit)
-{
-    displacement.tex.bind(displacement_tex_unit);
-    height_gradient.tex.bind(height_gradient_tex_unit);
-}
 
 } // namespace ocean
 
