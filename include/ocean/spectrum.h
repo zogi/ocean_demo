@@ -17,8 +17,7 @@ public:
     gpu::compute::event enqueue_generate(gpu::compute::command_queue queue,
                                          math::real time, gpu::compute::memory_object output_buffer,
                                          const gpu::compute::event_vector *wait_events = nullptr);
-    int get_N() const { return params.grid_size.x; }
-    int get_M() const { return params.grid_size.y; }
+    const surface_params& get_params() const { return params; }
 
 private:
     void set_initial_spectrum(gpu::compute::context context);

@@ -54,7 +54,8 @@ gpu::compute::event displacement_map::enqueue_export_kernel(const gpu::compute::
 
     queue.enqueueAcquireGLObjects(&gl_objects, wait_events, &event);
     gpu::compute::nd_range offset = { 0, 0 }, local_size = { 1, 1 };
-    gpu::compute::nd_range global_size = { static_cast<size_t>(wave_spectrum.get_N()), static_cast<size_t>(wave_spectrum.get_M()) };
+    auto size = wave_spectrum.get_params().grid_size;
+    gpu::compute::nd_range global_size = { cl::size_type(size.x), cl::size_type(size.y) };
     queue.enqueueNDRangeKernel(export_kernel, offset, global_size, local_size, &gpu::compute::event_vector({ event }), &event);
     queue.enqueueReleaseGLObjects(&gl_objects, &gpu::compute::event_vector({ event }), &event);
     return event;
