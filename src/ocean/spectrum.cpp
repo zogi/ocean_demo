@@ -1,6 +1,5 @@
 #include <ocean/spectrum.h>
 
-#include <cassert>
 #include <random>
 #include <vector>
 
