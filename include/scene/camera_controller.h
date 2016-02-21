@@ -16,7 +16,7 @@ public:
 
     camera_controller::camera_controller() : target(nullptr), radius(0) {}
     bool has_target() const { return target != nullptr; }
-    void set_target(camera *target);
+    void set_target(camera& target);
 
     void set_aspect_from_size(const os::window::size& size);
 

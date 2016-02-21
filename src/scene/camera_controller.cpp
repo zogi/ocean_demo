@@ -6,10 +6,10 @@ using math::real;
 
 namespace scene {
 
-void camera_controller::set_target(camera *target)
+void camera_controller::set_target(camera& target)
 {
-    this->target = target;
-    auto camera_vector = target->get_look_at() - target->get_position();
+    this->target = &target;
+    auto camera_vector = target.get_look_at() - target.get_position();
     radius =  math::length(camera_vector);
     orientation = math::spherical_angles(camera_vector);
 }
