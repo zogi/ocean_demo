@@ -13,7 +13,7 @@ using math::real;
 namespace ocean {
 
 spectrum::spectrum(const surface_params& params)
-  : params(params), compute(nullptr)
+  : params(params)
 {
 }
 
@@ -21,16 +21,13 @@ spectrum::~spectrum()
 {
 }
 
-void spectrum::bake_params(gpu::compute *compute)
+void spectrum::bake_params(gpu::compute::context context)
 {
-    assert(compute);
-    this->compute = compute;
-
-    set_initial_spectrum();
-    load_phase_shift_kernel();
+    set_initial_spectrum(context);
+    load_phase_shift_kernel(context);
 }
 
-gpu::compute::event spectrum::enqueue_generate(real time, gpu::compute::memory_object out, const gpu::compute::event_vector *wait_events)
+gpu::compute::event spectrum::enqueue_generate(gpu::compute::command_queue queue, real time, gpu::compute::memory_object out, const gpu::compute::event_vector *wait_events)
 {
     phase_shift_kernel.setArg(5, time);
     phase_shift_kernel.setArg(6, out);
@@ -39,12 +36,12 @@ gpu::compute::event spectrum::enqueue_generate(real time, gpu::compute::memory_o
     auto global_size = gpu::compute::nd_range(params.grid_size.x / 2 + 1, params.grid_size.y);
     auto local_size = gpu::compute::nd_range(1, 1);
     gpu::compute::event event;
-    compute->get_command_queue().enqueueNDRangeKernel(phase_shift_kernel, offset, global_size, local_size, wait_events, &event);
+    queue.enqueueNDRangeKernel(phase_shift_kernel, offset, global_size, local_size, wait_events, &event);
 
     return event;
 }
 
-void spectrum::set_initial_spectrum()
+void spectrum::set_initial_spectrum(gpu::compute::context context)
 {
     int size = (params.grid_size.x / 2 + 1) * params.grid_size.y * 2;
     std::vector<real> data(size);
@@ -64,12 +61,12 @@ void spectrum::set_initial_spectrum()
 
     // Upload data to GPU.
     int size_bytes = size * sizeof(real);
-    initial_spectrum = compute->create_buffer(CL_MEM_READ_ONLY | CL_MEM_HOST_WRITE_ONLY | CL_MEM_COPY_HOST_PTR, size_bytes, data.data());
+    initial_spectrum = gpu::compute::buffer(context, cl_mem_flags(CL_MEM_READ_ONLY | CL_MEM_HOST_WRITE_ONLY | CL_MEM_COPY_HOST_PTR), size_bytes, data.data());
 }
 
-void spectrum::load_phase_shift_kernel()
+void spectrum::load_phase_shift_kernel(gpu::compute::context context)
 {
-    auto program = gpu::compute::create_program_from_file(compute->get_context(), "kernels/phase_shift.cl");
+    auto program = gpu::compute::create_program_from_file(context, "kernels/phase_shift.cl");
     phase_shift_kernel = gpu::compute::kernel(program, "phase_shift");
     phase_shift_kernel.setArg(0, initial_spectrum);
     phase_shift_kernel.setArg(1, params.tile_size_physical.x);

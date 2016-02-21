@@ -11,11 +11,11 @@ displacement_map::~displacement_map()
 {
 }
 
-void displacement_map::set_spectrum(spectrum *wave_spectrum)
+void displacement_map::set_spectrum(gpu::compute *compute, spectrum *wave_spectrum)
 {
-    assert(wave_spectrum && wave_spectrum->get_compute());
+    assert(compute && wave_spectrum);
+    this->compute = compute;
     this->wave_spectrum = wave_spectrum;
-    this->compute = wave_spectrum->get_compute();
 
     int N = wave_spectrum->get_N();
     int M = wave_spectrum->get_M();
@@ -42,7 +42,7 @@ void displacement_map::shared_texture::init(gpu::compute *compute, size_t width,
 void displacement_map::enqueue_generate(math::real time, const gpu::compute::event_vector *wait_events)
 {
     gpu::compute::event event;
-    event = wave_spectrum->enqueue_generate(time, fft_buffer, wait_events);
+    event = wave_spectrum->enqueue_generate(compute->get_command_queue(), time, fft_buffer, wait_events);
     event = fft_algorithm.enqueue_transform(fft_buffer, &gpu::compute::event_vector({ event }));
     event = enqueue_export_kernel(&gpu::compute::event_vector({ event }));
     event.wait();

@@ -18,10 +18,10 @@ int main(int argc, char *argv[])
 
     LOG("Initializing Tessendorf heightfield.\n");
     ocean::spectrum ocean_spectrum(params);
-    ocean_spectrum.bake_params(&compute);
+    ocean_spectrum.bake_params(compute.get_context());
 
     scene::ocean_scene ocean_scene;
-    ocean_scene.init(&ocean_spectrum, 1.0f / 20.0f);
+    ocean_scene.init(&compute, &ocean_spectrum, 1.0f / 20.0f);
     main_window.set_camera(ocean_scene.get_main_camera());
 
     LOG("Starting main loop.\n");
