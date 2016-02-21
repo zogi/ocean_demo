@@ -11,14 +11,13 @@ displacement_map::~displacement_map()
 {
 }
 
-displacement_map::displacement_map(gpu::compute::command_queue queue, spectrum *wave_spectrum)
+displacement_map::displacement_map(gpu::compute::command_queue queue, const surface_params& params)
+  : wave_spectrum(queue.getInfo<CL_QUEUE_CONTEXT>(), params)
 {
-    assert(wave_spectrum);
     this->queue = queue;
-    this->wave_spectrum = wave_spectrum;
 
-    int N = wave_spectrum->get_N();
-    int M = wave_spectrum->get_M();
+    int N = wave_spectrum.get_N();
+    int M = wave_spectrum.get_M();
     auto context = queue.getInfo<CL_QUEUE_CONTEXT>();
 
     const size_t n_fft_batches = 5;
@@ -43,7 +42,7 @@ void displacement_map::shared_texture::init(gpu::compute::context context, size_
 void displacement_map::enqueue_generate(math::real time, const gpu::compute::event_vector *wait_events)
 {
     gpu::compute::event event;
-    event = wave_spectrum->enqueue_generate(queue, time, fft_buffer, wait_events);
+    event = wave_spectrum.enqueue_generate(queue, time, fft_buffer, wait_events);
     event = fft_algorithm.enqueue_transform(queue, fft_buffer, &gpu::compute::event_vector({ event }));
     event = enqueue_export_kernel(&gpu::compute::event_vector({ event }));
     event.wait();
@@ -58,8 +57,8 @@ void displacement_map::load_export_kernel()
     export_kernel = gpu::compute::kernel(program, "export_to_texture");
 
     export_kernel.setArg(0, fft_buffer);
-    export_kernel.setArg(1, wave_spectrum->get_N());
-    export_kernel.setArg(2, wave_spectrum->get_M());
+    export_kernel.setArg(1, wave_spectrum.get_N());
+    export_kernel.setArg(2, wave_spectrum.get_M());
     export_kernel.setArg(3, displacement.img);
     export_kernel.setArg(4, height_gradient.img);
 }
@@ -71,7 +70,7 @@ gpu::compute::event displacement_map::enqueue_export_kernel(const gpu::compute::
 
     queue.enqueueAcquireGLObjects(&gl_objects, wait_events, &event);
     gpu::compute::nd_range offset = { 0, 0 }, local_size = { 1, 1 };
-    gpu::compute::nd_range global_size = { static_cast<size_t>(wave_spectrum->get_N()), static_cast<size_t>(wave_spectrum->get_M()) };
+    gpu::compute::nd_range global_size = { static_cast<size_t>(wave_spectrum.get_N()), static_cast<size_t>(wave_spectrum.get_M()) };
     queue.enqueueNDRangeKernel(export_kernel, offset, global_size, local_size, &gpu::compute::event_vector({ event }), &event);
     queue.enqueueReleaseGLObjects(&gl_objects, &gpu::compute::event_vector({ event }), &event);
     return event;

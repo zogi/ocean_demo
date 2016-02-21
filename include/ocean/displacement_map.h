@@ -4,6 +4,7 @@
 #include <api/gpu/compute.h>
 #include <api/gpu/fft.h>
 #include <api/math.h>
+#include <ocean/surface_params.h>
 #include <ocean/spectrum.h>
 #include <rendering/texture_2d.h>
 
@@ -12,7 +13,7 @@ namespace ocean {
 class displacement_map {
 public:
 
-    displacement_map(gpu::compute::command_queue queue, spectrum *wave_spectrum);
+    displacement_map(gpu::compute::command_queue queue, const surface_params& params);
     ~displacement_map();
     displacement_map(const displacement_map&) = delete;
     displacement_map& operator=(const displacement_map&) = delete;
@@ -33,7 +34,7 @@ private:
     gpu::compute::event enqueue_export_kernel(const gpu::compute::event_vector *wait_events = nullptr);
 
     gpu::compute::command_queue queue;
-    spectrum *wave_spectrum;
+    spectrum wave_spectrum;
     gpu::fft::ifft2d_hermitian_inplace fft_algorithm;
     gpu::compute::memory_object fft_buffer;
     gpu::compute::kernel export_kernel;

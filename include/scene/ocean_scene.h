@@ -4,6 +4,7 @@
 #include <api/math.h>
 #include <ocean/displacement_map.h>
 #include <ocean/spectrum.h>
+#include <ocean/surface_params.h>
 #include <rendering/quad.h>
 #include <rendering/shader_effect.h>
 #include <rendering/cubemap.h>
@@ -13,7 +14,7 @@ namespace scene {
 
 class ocean_scene {
 public:
-    ocean_scene(gpu::compute::command_queue queue, ocean::spectrum *ocean_spectrum, math::real units_per_meter);
+    ocean_scene(gpu::compute::command_queue queue, const ocean::surface_params& params, math::real units_per_meter);
     ocean_scene(const ocean_scene&) = delete;
     ocean_scene& operator=(const ocean_scene&) = delete;
 
