@@ -1,17 +1,16 @@
 #include <ocean/displacement_map.h>
 
-#include <cassert>
-
 #include <util/error.h>
 #include <util/util.h>
 
 namespace ocean {
 
 displacement_map::displacement_map(gpu::compute::command_queue queue, const surface_params& params)
-  : wave_spectrum(queue.getInfo<CL_QUEUE_CONTEXT>(), params)
+  : queue(queue),
+    wave_spectrum(queue.getInfo<CL_QUEUE_CONTEXT>(), params),
+    displacement_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.grid_size, texture_format::TEXTURE_FORMAT_RGBA8),
+    height_gradient_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.grid_size, texture_format::TEXTURE_FORMAT_RG16F)
 {
-    this->queue = queue;
-
     int N = wave_spectrum.get_N();
     int M = wave_spectrum.get_M();
     auto context = queue.getInfo<CL_QUEUE_CONTEXT>();
@@ -21,15 +20,12 @@ displacement_map::displacement_map(gpu::compute::command_queue queue, const surf
     size_t buf_size_bytes = n_fft_batches * (N + 2) * M * sizeof(float);
     fft_buffer = gpu::compute::buffer(context, CL_MEM_READ_WRITE, buf_size_bytes);
 
-    displacement_map.init(context, N, M, texture_format::TEXTURE_FORMAT_RGBA8);
-    height_gradient_map.init(context, N, M, texture_format::TEXTURE_FORMAT_RG16F);
-
     load_export_kernel();
 }
 
-void displacement_map::shared_texture::init(gpu::compute::context context, size_t width, size_t height, texture_format format)
+displacement_map::shared_texture::shared_texture(gpu::compute::context& context, math::ivec2 size, texture_format format)
 {
-    tex.init(width, height, format);
+    tex.init(size.x, size.y, format);
     tex.set_max_anisotropy(2);
     img = gpu::compute::graphics_image(context, CL_MEM_WRITE_ONLY, GL_TEXTURE_2D, 0, tex.get_api_texture());
     tex.generate_mipmap();
