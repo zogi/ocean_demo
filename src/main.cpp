@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[])
 {
-    rendering::main_window main_window(640, 480, "demo", 4);
+    rendering::main_window main_window(640, 480, "ocean demo", 4);
 
     gpu::compute compute(main_window.get_graphics_context());
 
