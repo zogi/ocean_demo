@@ -32,7 +32,7 @@ public:
 
     buffer create_buffer(cl_mem_flags mem_flags, size_t size, void *host_ptr = nullptr);
     graphics_image create_graphics_image(cl_mem_flags mem_flags, graphics::texture texture);
-    program create_program_from_file(const char *file_name);
+    static program create_program_from_file(gpu::compute::context context, const char *file_name);
 
     context& get_context() { return c_context; }
     command_queue& get_command_queue() { return c_queue; }

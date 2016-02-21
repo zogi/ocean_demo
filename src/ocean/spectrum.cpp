@@ -69,7 +69,7 @@ void spectrum::set_initial_spectrum()
 
 void spectrum::load_phase_shift_kernel()
 {
-    auto program = compute->create_program_from_file("kernels/phase_shift.cl");
+    auto program = gpu::compute::create_program_from_file(compute->get_context(), "kernels/phase_shift.cl");
     phase_shift_kernel = gpu::compute::kernel(program, "phase_shift");
     phase_shift_kernel.setArg(0, initial_spectrum);
     phase_shift_kernel.setArg(1, params.tile_size_physical.x);

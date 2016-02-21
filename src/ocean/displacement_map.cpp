@@ -53,7 +53,7 @@ void displacement_map::enqueue_generate(math::real time, const gpu::compute::eve
 
 void displacement_map::load_export_kernel()
 {
-    auto program = compute->create_program_from_file("kernels/export_to_texture.cl");
+    auto program = gpu::compute::create_program_from_file(compute->get_context(), "kernels/export_to_texture.cl");
     export_kernel = gpu::compute::kernel(program, "export_to_texture");
 
     export_kernel.setArg(0, fft_buffer);

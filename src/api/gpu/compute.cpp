@@ -73,16 +73,20 @@ compute::compute(os::window::graphics_context graphics_context)
     c_queue = command_queue(c_context, c_device);
 }
 
-compute::program compute::create_program_from_file(const char *file_name)
+compute::program compute::create_program_from_file(gpu::compute::context context, const char *file_name)
 {
     auto source = util::read_file_contents(file_name);
-    auto res = program(c_context, source, false);
+    auto res = program(context, source, false);
+    auto devices = context.getInfo<CL_CONTEXT_DEVICES>();
 
     try {
-        res.build({ c_device });
+        res.build(devices);
     } catch (cl::Error e) {
-        auto build_log = res.getBuildInfo<CL_PROGRAM_BUILD_LOG>(c_device);
-        LOG("%s\n", build_log.c_str());
+        for (auto device : devices) {
+            auto device_name = device.getInfo<CL_DEVICE_NAME>();
+            auto build_log = res.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device);
+            LOG("%s: %s\n", device_name.c_str(), build_log.c_str());
+        }
         throw;
     }
 
