@@ -20,11 +20,11 @@ spectrum::spectrum(gpu::compute::context context, const surface_params& params)
 }
 
 gpu::compute::event spectrum::enqueue_generate(gpu::compute::command_queue queue,
-                                               real time, gpu::compute::memory_object out,
+                                               real time, gpu::compute::memory_object output_buffer,
                                                const gpu::compute::event_vector *wait_events)
 {
     phase_shift_kernel.setArg(5, time);
-    phase_shift_kernel.setArg(6, out);
+    phase_shift_kernel.setArg(6, output_buffer);
 
     auto offset = gpu::compute::nd_range(0, 0);
     auto global_size = gpu::compute::nd_range(params.grid_size.x / 2 + 1, params.grid_size.y);
