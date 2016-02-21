@@ -23,7 +23,7 @@ void ocean_scene::init(gpu::compute *compute, ocean::spectrum *ocean_spectrum, m
     unit_quad.init();
 
     // Ocean
-    ocean_surface.set_spectrum(compute, ocean_spectrum);
+    ocean_surface.set_spectrum(compute->get_command_queue(), ocean_spectrum);
     ocean_surface.bind_textures(ocean_displacement_tex_unit, ocean_height_deriv_tex_unit);
 
     ocean_effect.load_shaders("shaders/ocean.glsl", VERTEX | GEOMETRY | FRAGMENT);

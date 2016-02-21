@@ -11,39 +11,40 @@ displacement_map::~displacement_map()
 {
 }
 
-void displacement_map::set_spectrum(gpu::compute *compute, spectrum *wave_spectrum)
+void displacement_map::set_spectrum(gpu::compute::command_queue queue, spectrum *wave_spectrum)
 {
-    assert(compute && wave_spectrum);
-    this->compute = compute;
+    assert(wave_spectrum);
+    this->queue = queue;
     this->wave_spectrum = wave_spectrum;
 
     int N = wave_spectrum->get_N();
     int M = wave_spectrum->get_M();
+    auto context = queue.getInfo<CL_QUEUE_CONTEXT>();
 
     const size_t n_fft_batches = 5;
-    fft_algorithm.create_plan(compute->get_command_queue(), N, M, n_fft_batches);
+    fft_algorithm.create_plan(queue, N, M, n_fft_batches);
     size_t buf_size_bytes = n_fft_batches * (N + 2) * M * sizeof(float);
-    fft_buffer = compute->create_buffer(CL_MEM_READ_WRITE, buf_size_bytes);
+    fft_buffer = gpu::compute::buffer(context, CL_MEM_READ_WRITE, buf_size_bytes);
 
-    displacement.init(compute, N, M, texture_format::TEXTURE_FORMAT_RGBA8);
-    height_gradient.init(compute, N, M, texture_format::TEXTURE_FORMAT_RG16F);
+    displacement.init(context, N, M, texture_format::TEXTURE_FORMAT_RGBA8);
+    height_gradient.init(context, N, M, texture_format::TEXTURE_FORMAT_RG16F);
 
     load_export_kernel();
 }
 
-void displacement_map::shared_texture::init(gpu::compute *compute, size_t width, size_t height, texture_format format)
+void displacement_map::shared_texture::init(gpu::compute::context context, size_t width, size_t height, texture_format format)
 {
     tex.init(width, height, format);
     tex.set_max_anisotropy(2);
-    img = compute->create_graphics_image(CL_MEM_WRITE_ONLY, tex.get_api_texture());
+    img = gpu::compute::graphics_image(context, CL_MEM_WRITE_ONLY, GL_TEXTURE_2D, 0, tex.get_api_texture());
     tex.generate_mipmap();
 }
 
 void displacement_map::enqueue_generate(math::real time, const gpu::compute::event_vector *wait_events)
 {
     gpu::compute::event event;
-    event = wave_spectrum->enqueue_generate(compute->get_command_queue(), time, fft_buffer, wait_events);
-    event = fft_algorithm.enqueue_transform(compute->get_command_queue(), fft_buffer, &gpu::compute::event_vector({ event }));
+    event = wave_spectrum->enqueue_generate(queue, time, fft_buffer, wait_events);
+    event = fft_algorithm.enqueue_transform(queue, fft_buffer, &gpu::compute::event_vector({ event }));
     event = enqueue_export_kernel(&gpu::compute::event_vector({ event }));
     event.wait();
 
@@ -53,7 +54,7 @@ void displacement_map::enqueue_generate(math::real time, const gpu::compute::eve
 
 void displacement_map::load_export_kernel()
 {
-    auto program = gpu::compute::create_program_from_file(compute->get_context(), "kernels/export_to_texture.cl");
+    auto program = gpu::compute::create_program_from_file(queue.getInfo<CL_QUEUE_CONTEXT>(), "kernels/export_to_texture.cl");
     export_kernel = gpu::compute::kernel(program, "export_to_texture");
 
     export_kernel.setArg(0, fft_buffer);
@@ -66,7 +67,6 @@ void displacement_map::load_export_kernel()
 gpu::compute::event displacement_map::enqueue_export_kernel(const gpu::compute::event_vector *wait_events)
 {
     gpu::compute::event event;
-    auto queue = compute->get_command_queue();
     std::vector<gpu::compute::memory_object> gl_objects = { displacement.img, height_gradient.img };
 
     queue.enqueueAcquireGLObjects(&gl_objects, wait_events, &event);
