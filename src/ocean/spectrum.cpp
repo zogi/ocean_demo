@@ -19,7 +19,9 @@ spectrum::spectrum(gpu::compute::context context, const surface_params& params)
     load_phase_shift_kernel(context);
 }
 
-gpu::compute::event spectrum::enqueue_generate(gpu::compute::command_queue queue, real time, gpu::compute::memory_object out, const gpu::compute::event_vector *wait_events)
+gpu::compute::event spectrum::enqueue_generate(gpu::compute::command_queue queue,
+                                               real time, gpu::compute::memory_object out,
+                                               const gpu::compute::event_vector *wait_events)
 {
     phase_shift_kernel.setArg(5, time);
     phase_shift_kernel.setArg(6, out);

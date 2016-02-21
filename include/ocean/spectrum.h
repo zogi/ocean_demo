@@ -13,7 +13,9 @@ public:
     spectrum(const spectrum&) = delete;
     spectrum& operator=(const spectrum&) = delete;
 
-    gpu::compute::event enqueue_generate(gpu::compute::command_queue queue, math::real time, gpu::compute::memory_object out, const gpu::compute::event_vector *wait_events = nullptr);
+    gpu::compute::event enqueue_generate(gpu::compute::command_queue queue,
+                                         math::real time, gpu::compute::memory_object out,
+                                         const gpu::compute::event_vector *wait_events = nullptr);
     int get_N() const { return params.grid_size.x; }
     int get_M() const { return params.grid_size.y; }
 
