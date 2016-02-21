@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <api/gpu/compute.h>
+#include <api/math.h>
 #include <ocean/surface_params.h>
 
 namespace ocean {
