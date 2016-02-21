@@ -36,7 +36,7 @@ private:
     gpu::compute::command_queue queue;
     spectrum wave_spectrum;
     gpu::fft::ifft2d_hermitian_inplace fft_algorithm;
-    gpu::compute::memory_object fft_buffer;
+    gpu::compute::buffer fft_buffer;
     gpu::compute::kernel export_kernel;
     shared_texture displacement_map, height_gradient_map;
 };
