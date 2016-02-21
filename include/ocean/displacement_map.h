@@ -12,12 +12,11 @@ namespace ocean {
 class displacement_map {
 public:
 
-    displacement_map() : wave_spectrum(nullptr) {}
+    displacement_map(gpu::compute::command_queue queue, spectrum *wave_spectrum);
     ~displacement_map();
     displacement_map(const displacement_map&) = delete;
     displacement_map& operator=(const displacement_map&) = delete;
 
-    void set_spectrum(gpu::compute::command_queue queue, spectrum *wave_spectrum);
     void enqueue_generate(math::real time, const gpu::compute::event_vector *wait_events = nullptr);
     void bind_textures(gpu::graphics::texture_unit displacement_tex_unit, gpu::graphics::texture_unit height_gradient_tex_unit);
 

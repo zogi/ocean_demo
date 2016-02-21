@@ -11,7 +11,7 @@ displacement_map::~displacement_map()
 {
 }
 
-void displacement_map::set_spectrum(gpu::compute::command_queue queue, spectrum *wave_spectrum)
+displacement_map::displacement_map(gpu::compute::command_queue queue, spectrum *wave_spectrum)
 {
     assert(wave_spectrum);
     this->queue = queue;

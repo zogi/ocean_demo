@@ -16,6 +16,7 @@ constexpr gpu::graphics::texture_unit sky_cubemap_tex_unit = 2;
 
 
 ocean_scene::ocean_scene(gpu::compute::command_queue queue, ocean::spectrum *ocean_spectrum, math::real units_per_meter)
+  : ocean_surface(queue, ocean_spectrum)
 {
     main_camera.set_look_at(math::vec3(0, 1, 0));
     main_camera.set_position(math::vec3(0, 4, 6));
@@ -23,7 +24,6 @@ ocean_scene::ocean_scene(gpu::compute::command_queue queue, ocean::spectrum *oce
     unit_quad.init();
 
     // Ocean
-    ocean_surface.set_spectrum(queue, ocean_spectrum);
     ocean_surface.bind_textures(ocean_displacement_tex_unit, ocean_height_deriv_tex_unit);
 
     ocean_effect.load_shaders("shaders/ocean.glsl", VERTEX | GEOMETRY | FRAGMENT);
