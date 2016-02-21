@@ -11,15 +11,10 @@ displacement_map::displacement_map(gpu::compute::command_queue queue, const surf
   : queue(queue),
     wave_spectrum(queue.getInfo<CL_QUEUE_CONTEXT>(), params),
     fft_algorithm(queue, params.grid_size, N_FFT_BATCHES),
+    fft_buffer(queue.getInfo<CL_QUEUE_CONTEXT>(), CL_MEM_READ_ONLY, N_FFT_BATCHES * (params.grid_size.x + 2) * params.grid_size.y * sizeof(float)),
     displacement_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.grid_size, texture_format::TEXTURE_FORMAT_RGBA8),
     height_gradient_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.grid_size, texture_format::TEXTURE_FORMAT_RG16F)
 {
-    int N = wave_spectrum.get_N();
-    int M = wave_spectrum.get_M();
-    auto context = queue.getInfo<CL_QUEUE_CONTEXT>();
-    size_t buf_size_bytes = N_FFT_BATCHES * (N + 2) * M * sizeof(float);
-    fft_buffer = gpu::compute::buffer(context, CL_MEM_READ_WRITE, buf_size_bytes);
-
     load_export_kernel();
 }
 
