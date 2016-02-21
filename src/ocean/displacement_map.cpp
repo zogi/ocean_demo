@@ -21,8 +21,8 @@ displacement_map::displacement_map(gpu::compute::command_queue queue, const surf
     size_t buf_size_bytes = n_fft_batches * (N + 2) * M * sizeof(float);
     fft_buffer = gpu::compute::buffer(context, CL_MEM_READ_WRITE, buf_size_bytes);
 
-    displacement.init(context, N, M, texture_format::TEXTURE_FORMAT_RGBA8);
-    height_gradient.init(context, N, M, texture_format::TEXTURE_FORMAT_RG16F);
+    displacement_map.init(context, N, M, texture_format::TEXTURE_FORMAT_RGBA8);
+    height_gradient_map.init(context, N, M, texture_format::TEXTURE_FORMAT_RG16F);
 
     load_export_kernel();
 }
@@ -43,8 +43,8 @@ void displacement_map::enqueue_generate(math::real time, const gpu::compute::eve
     event = enqueue_export_kernel(&gpu::compute::event_vector({ event }));
     event.wait();
 
-    displacement.tex.generate_mipmap();
-    height_gradient.tex.generate_mipmap();
+    displacement_map.tex.generate_mipmap();
+    height_gradient_map.tex.generate_mipmap();
 }
 
 void displacement_map::load_export_kernel()
@@ -55,14 +55,14 @@ void displacement_map::load_export_kernel()
     export_kernel.setArg(0, fft_buffer);
     export_kernel.setArg(1, wave_spectrum.get_N());
     export_kernel.setArg(2, wave_spectrum.get_M());
-    export_kernel.setArg(3, displacement.img);
-    export_kernel.setArg(4, height_gradient.img);
+    export_kernel.setArg(3, displacement_map.img);
+    export_kernel.setArg(4, height_gradient_map.img);
 }
 
 gpu::compute::event displacement_map::enqueue_export_kernel(const gpu::compute::event_vector *wait_events)
 {
     gpu::compute::event event;
-    std::vector<gpu::compute::memory_object> gl_objects = { displacement.img, height_gradient.img };
+    std::vector<gpu::compute::memory_object> gl_objects = { displacement_map.img, height_gradient_map.img };
 
     queue.enqueueAcquireGLObjects(&gl_objects, wait_events, &event);
     gpu::compute::nd_range offset = { 0, 0 }, local_size = { 1, 1 };
