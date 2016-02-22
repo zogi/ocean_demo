@@ -12,9 +12,8 @@
 #include <CL/cl_gl.h>
 
 namespace gpu {
+namespace compute {
 
-class compute {
-public:
     typedef cl::Platform       platform;
     typedef cl::Device         device;
     typedef cl::Context        context;
@@ -28,34 +27,11 @@ public:
     typedef std::vector<event> event_vector;
     typedef cl::NDRange        nd_range;
 
-    compute(os::window::graphics_context graphics_context);
+    command_queue init(os::window::graphics_context graphics_context);
+    program create_program_from_file(gpu::compute::context context, const char *file_name);
+    const char *get_error_string(cl_int status);
 
-    buffer create_buffer(cl_mem_flags mem_flags, size_t size, void *host_ptr = nullptr);
-    graphics_image create_graphics_image(cl_mem_flags mem_flags, graphics::texture texture);
-    static program create_program_from_file(gpu::compute::context context, const char *file_name);
-
-    context& get_context() { return c_context; }
-    command_queue& get_command_queue() { return c_queue; }
-
-    static const char *get_error_string(cl_int status);
-
-private:
-    platform c_platform;
-    device c_device;
-    context c_context;
-    command_queue c_queue;
-};
-
-inline compute::buffer compute::create_buffer(cl_mem_flags mem_flags, size_t size, void *host_ptr)
-{
-    return buffer(c_context, mem_flags, size, host_ptr);
-}
-
-inline compute::graphics_image compute::create_graphics_image(cl_mem_flags mem_flags, graphics::texture texture)
-{
-    return graphics_image(c_context, mem_flags, GL_TEXTURE_2D, 0, texture);
-}
-
+} // namespace compute
 } // namespace gpu
 
 #endif // !__COMPUTE_H_GUARD

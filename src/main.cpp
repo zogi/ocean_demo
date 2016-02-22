@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
     main_window main_window(640, 480, "ocean demo", 4);
 
-    gpu::compute compute(main_window.get_graphics_context());
+    gpu::compute::command_queue queue = gpu::compute::init(main_window.get_graphics_context());
 
     ocean::surface_params params;
     params.tile_size_logical = math::vec3(10, 10, 10);
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     params.set_wind_vector(math::vec2(15, 0));
 
     LOG("Initializing Tessendorf heightfield.\n");
-    scene::ocean_scene ocean_scene(compute.get_command_queue(), params);
+    scene::ocean_scene ocean_scene(queue, params);
 
     scene::camera_controller camera_controller;
     camera_controller.set_target(ocean_scene.get_main_camera());

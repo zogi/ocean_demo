@@ -10,6 +10,7 @@
 #include <util/util.h>
 
 namespace gpu {
+namespace compute {
 
 namespace {
     using std::string;
@@ -57,27 +58,27 @@ namespace {
 
 } // unnamed namespace
 
-compute::compute(os::window::graphics_context graphics_context)
+command_queue init(os::window::graphics_context graphics_context)
 {
     extension_vector required_extensions = { "cl_khr_gl_sharing", "cl_khr_gl_event" };
 
-    c_device = get_device(CL_DEVICE_TYPE_GPU, required_extensions);
-    c_platform = c_device.getInfo<CL_DEVICE_PLATFORM>();
+    auto c_device = get_device(CL_DEVICE_TYPE_GPU, required_extensions);
+    auto c_platform_id = c_device.getInfo<CL_DEVICE_PLATFORM>();
 
     cl_context_properties context_properties[] = {
-        CL_CONTEXT_PLATFORM, reinterpret_cast<cl_context_properties>(c_platform()),
+        CL_CONTEXT_PLATFORM, reinterpret_cast<cl_context_properties>(c_platform_id),
         CL_GL_CONTEXT_KHR, reinterpret_cast<cl_context_properties>(graphics_context),
         0 };
-    c_context = context(c_device, context_properties, nullptr, nullptr);
+    auto c_context = context(c_device, context_properties, nullptr, nullptr);
 
-    c_queue = command_queue(c_context, c_device);
+    return command_queue(c_context, c_device);
 }
 
-compute::program compute::create_program_from_file(gpu::compute::context context, const char *file_name)
+program create_program_from_file(context c_context, const char *file_name)
 {
     auto source = util::read_file_contents(file_name);
-    auto res = program(context, source, false);
-    auto devices = context.getInfo<CL_CONTEXT_DEVICES>();
+    auto res = program(c_context, source, false);
+    auto devices = c_context.getInfo<CL_CONTEXT_DEVICES>();
 
     try {
         res.build(devices);
@@ -170,4 +171,5 @@ const char *compute::get_error_string(cl_int status)
     }
 }
 
+} // namespace compute
 } // namespace gpu
