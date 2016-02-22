@@ -21,9 +21,7 @@ public:
     inline window::size get_size() const;
     window::graphics_context get_graphics_context() const { return gl_context; }
 
-    // event_handler has to have a public method named 'handle_event' which accepts a single os::event argument.
-    template <typename event_handler>
-    void process_events(event_handler event_handler_object = event_handler());
+    bool poll_event(os::event& out_event) { return SDL_PollEvent(&out_event.get_api_event()) != 0; }
 
 private:
     SDL_Window *window_handle;
@@ -40,15 +38,6 @@ inline window::size window::get_size() const
     int width, height;
     SDL_GetWindowSize(window_handle, &width, &height);
     return { width, height };
-}
-
-template<typename event_handler>
-inline void window::process_events(event_handler event_handler_object)
-{
-    api::event api_event;
-    while (SDL_PollEvent(&api_event)) {
-        event_handler_object.handle_event(os::event(api_event));
-    }
 }
 
 } // namespace os

@@ -15,26 +15,24 @@ void main_window::attach_camera(scene::camera& camera)
 
 void main_window::process_events()
 {
-    window.process_events<main_window&>(*this);
+    os::event event;
+    while (window.poll_event(event)) {
+        if (event.is_quit_event()) {
+            handle_quit_event();
+        } else if (event.is_window_resize_event()) {
+            handle_resize_event(event.get_window_size());
+        } else if (event.is_keyboard_event()) {
+            handle_keyboard_event(event.get_keyboard_event());
+        }
+
+        camera_controller.handle_event(event);
+    }
 }
 
 void main_window::swap_frame()
 {
     framebuffer.resolve_to_backbuffer();
     window.swap_frame();
-}
-
-void main_window::handle_event(const os::event& event)
-{
-    if (event.is_quit_event()) {
-        handle_quit_event();
-    } else if (event.is_window_resize_event()) {
-        handle_resize_event(event.get_window_size());
-    } else if (event.is_keyboard_event()) {
-        handle_keyboard_event(event.get_keyboard_event());
-    }
-
-    camera_controller.handle_event(event);
 }
 
 void main_window::handle_quit_event()

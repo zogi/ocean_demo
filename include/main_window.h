@@ -20,8 +20,6 @@ public:
     os::window::size get_size() const { return window.get_size(); }
     auto get_graphics_context() const { return window.get_graphics_context(); }
 
-    void handle_event(const os::event& event);
-
 private:
     void handle_quit_event();
     void handle_resize_event(const os::window::size& size);

@@ -79,9 +79,11 @@ struct window_size : math::ivec2
     value_type get_height() const { return y; }
 };
 
+class window;
+
 class event {
 public:
-    event(api::event api_event) : api_event(api_event) {}
+    event(api::event api_event = api::event()) : api_event(api_event) {}
 
     bool is_keyboard_event() const { return api_event.type == SDL_KEYDOWN || api_event.type == SDL_KEYUP; }
     bool is_mouse_move_event() const { return api_event.type == SDL_MOUSEMOTION; }
@@ -95,6 +97,10 @@ public:
     window_size get_window_size() const { return { api_event.window.data1, api_event.window.data2 }; }
 
 private:
+    friend class window;
+    api::event get_api_event() const { return api_event; }
+    api::event& get_api_event() { return api_event; }
+
     api::event api_event;
 };
 
