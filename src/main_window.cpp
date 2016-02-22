@@ -9,8 +9,8 @@ main_window::main_window(int width, int height, const char *title, int num_frame
 
 void main_window::attach_camera(scene::camera& camera)
 {
-    main_camera_controller.set_target(camera);
-    main_camera_controller.set_viewport_size(window.get_size());
+    camera_controller.set_target(camera);
+    camera_controller.set_viewport_size(window.get_size());
 }
 
 void main_window::process_events()
@@ -34,7 +34,7 @@ void main_window::handle_event(const os::event& event)
         handle_keyboard_event(event.get_keyboard_event());
     }
 
-    main_camera_controller.handle_event(event);
+    camera_controller.handle_event(event);
 }
 
 void main_window::handle_quit_event()

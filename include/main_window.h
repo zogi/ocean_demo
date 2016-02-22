@@ -29,7 +29,7 @@ private:
 
     os::window window;
     rendering::multisample_framebuffer framebuffer;
-    scene::camera_controller main_camera_controller;
+    scene::camera_controller camera_controller;
     run_state run_state;
 };
 
