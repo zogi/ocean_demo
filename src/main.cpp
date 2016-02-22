@@ -22,7 +22,8 @@ int main(int argc, char *argv[])
 
     LOG("Starting main loop.\n");
     while (main_window.get_run_state() == main_window::RUN_STATE_RUNNING) {
-        main_window.process_events();
+        for (auto event : main_window.unprocessed_events()) {
+        }
         ocean_scene.render();
         main_window.swap_frame();
     }
