@@ -20,9 +20,9 @@ public:
 
     void set_aspect_from_size(const os::window::size& size);
 
-    void mouse_set_anchor(const mouse_pos_norm& pos);
-    void mouse_rotate(const mouse_pos_norm& pos);
-    void mouse_reset_anchor(const mouse_pos_norm& pos);
+    void handle_event(const os::event& event);
+    void handle_mouse_button_event(const os::mouse_button_event& event);
+    void handle_mouse_move_event(const os::mouse_move_event & event);
 
 private:
     math::spherical_angles spherical_angles_from_mouse_pos(const mouse_pos_norm& pos);

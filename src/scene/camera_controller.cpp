@@ -14,27 +14,48 @@ void camera_controller::set_target(camera& target)
     orientation = math::spherical_angles(camera_vector);
 }
 
-void camera_controller::mouse_set_anchor(const mouse_pos_norm& pos)
+void camera_controller::handle_event(const os::event& event)
 {
-    anchor_pos = pos;
+    if (event.is_window_resize_event()) {
+        if (!target) return;
+        set_aspect_from_size(event.get_window_size());
+    } else if (event.is_mouse_button_event()) {
+        handle_mouse_button_event(event.get_mouse_button_event());
+    } else if (event.is_mouse_move_event()) {
+        handle_mouse_move_event(event.get_mouse_move_event());
+    }
 }
 
-void camera_controller::mouse_rotate(const mouse_pos_norm& pos)
+void camera_controller::handle_mouse_button_event(const os::mouse_button_event& event)
 {
-    auto new_orientation = spherical_angles_from_mouse_pos(pos);
-    auto camera_vector = radius * new_orientation.cartesian();
-    target->set_position(target->get_look_at() - camera_vector);
-}
+    if (event.get_mouse_button() != os::mouse_button_event::MOUSE_BUTTON_LEFT)
+        return;
 
-void camera_controller::mouse_reset_anchor(const mouse_pos_norm& pos)
-{
-    orientation = spherical_angles_from_mouse_pos(pos);
+    math::vec2 window_size = target->get_viewport_size();
+    math::vec2 mouse_pos = event.get_mouse_button_pos();
+    if (event.is_mouse_button_down()) {
+        anchor_pos = mouse_pos / window_size;
+    } else {
+        orientation = spherical_angles_from_mouse_pos(mouse_pos / window_size);
+    }
 }
 
 void camera_controller::set_aspect_from_size(const os::window::size& size)
 {
     if (!target) return;
     target->set_viewport_size(size);
+}
+
+void camera_controller::handle_mouse_move_event(const os::mouse_move_event& event)
+{
+    math::vec2 window_size = target->get_viewport_size();
+    math::vec2 mouse_pos = event.get_mouse_move_pos();
+    if (event.get_mouse_move_button_state() & os::mouse_move_event::MOUSE_BUTTON_STATE_LEFT) {
+        // Rotate view.
+        auto new_orientation = spherical_angles_from_mouse_pos(mouse_pos / window_size);
+        auto camera_vector = radius * new_orientation.cartesian();
+        target->set_position(target->get_look_at() - camera_vector);
+    }
 }
 
 math::spherical_angles camera_controller::spherical_angles_from_mouse_pos(const mouse_pos_norm& pos)

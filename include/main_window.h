@@ -30,8 +30,6 @@ private:
     void handle_quit_event();
     void handle_resize_event(const os::window::size& size);
     void handle_keyboard_event(const os::keyboard_event& event);
-    void handle_mouse_button_event(const os::mouse_button_event& event);
-    void handle_mouse_move_event(const os::mouse_move_event& event);
 
     os::window window;
     event_handler event_handler;
