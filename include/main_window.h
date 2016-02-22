@@ -17,7 +17,6 @@ public:
     void swap_frame();
     void attach_camera(scene::camera& camera);
     run_state get_run_state() const { return run_state; }
-    os::window::size get_size() const { return window.get_size(); }
     auto get_graphics_context() const { return window.get_graphics_context(); }
 
 private:
