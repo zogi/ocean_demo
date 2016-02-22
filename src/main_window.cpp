@@ -27,6 +27,7 @@ void main_window::swap_frame()
 {
     framebuffer.resolve_to_backbuffer();
     window.swap_frame();
+    framebuffer.activate();
 }
 
 void main_window::handle_quit_event()

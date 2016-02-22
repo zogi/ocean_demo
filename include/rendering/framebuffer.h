@@ -13,6 +13,9 @@ public:
     multisample_framebuffer& operator=(const multisample_framebuffer&) = delete;
 
     void resize(int new_width, int new_height);
+    // Draw calls render to this framebuffer after calling activate.
+    void activate();
+    // Draw calls render to backbuffer after calling resolve_to_backbuffer.
     void resolve_to_backbuffer();
 
 private:

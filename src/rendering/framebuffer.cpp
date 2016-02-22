@@ -48,6 +48,11 @@ void multisample_framebuffer::resize(int new_width, int new_height)
     std::swap(depth_rb, new_fb.depth_rb);
 }
 
+void multisample_framebuffer::activate()
+{
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+}
+
 void multisample_framebuffer::resolve_to_backbuffer()
 {
     // Blit from framebuffer to backbuffer.
@@ -55,8 +60,6 @@ void multisample_framebuffer::resolve_to_backbuffer()
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     glDrawBuffer(GL_BACK);
     glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 }
 
 } // namespace rendering
