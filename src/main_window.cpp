@@ -10,7 +10,7 @@ main_window::main_window(int width, int height, const char *title, int num_frame
 void main_window::attach_camera(scene::camera& camera)
 {
     main_camera_controller.set_target(camera);
-    main_camera_controller.set_aspect_from_size(window.get_size());
+    main_camera_controller.set_viewport_size(window.get_size());
 }
 
 void main_window::swap_frame()

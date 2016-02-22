@@ -14,11 +14,17 @@ void camera_controller::set_target(camera& target)
     orientation = math::spherical_angles(camera_vector);
 }
 
+void camera_controller::set_viewport_size(const math::ivec2& size)
+{
+    if (!target) return;
+    target->set_viewport_size(size);
+}
+
 void camera_controller::handle_event(const os::event& event)
 {
     if (event.is_window_resize_event()) {
         if (!target) return;
-        set_aspect_from_size(event.get_window_size());
+        set_viewport_size(event.get_window_size());
     } else if (event.is_mouse_button_event()) {
         handle_mouse_button_event(event.get_mouse_button_event());
     } else if (event.is_mouse_move_event()) {
@@ -38,12 +44,6 @@ void camera_controller::handle_mouse_button_event(const os::mouse_button_event& 
     } else {
         orientation = spherical_angles_from_mouse_pos(mouse_pos / window_size);
     }
-}
-
-void camera_controller::set_aspect_from_size(const os::window::size& size)
-{
-    if (!target) return;
-    target->set_viewport_size(size);
 }
 
 void camera_controller::handle_mouse_move_event(const os::mouse_move_event& event)
