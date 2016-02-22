@@ -1,17 +1,34 @@
 #include <main_window.h>
 
-main_window::main_window(int width, int height, const char *title, int num_framebuffer_samples)
-    : window(width, height, title),
-      framebuffer(width, height, num_framebuffer_samples),
-      run_state(RUN_STATE_RUNNING)
+main_window::main_window(const size& window_size, const rendering::rendering_params& rendering_params, const ocean::surface_params& ocean_params)
+  : window(window_size, "ocean demo"),
+    queue(gpu::compute::init(window.get_graphics_context())),
+    framebuffer(window_size.x, window_size.y, rendering_params.multisampling_sample_count),
+    ocean_scene(queue, ocean_params), // TODO: pass rendering params to ctor. Then the camera should only store aspect and not viewport size.
+    camera_controller(ocean_scene.get_main_camera()),
+    run_state(RUN_STATE_RUNNING)
 {
+    camera_controller.set_viewport_size(get_size());
 }
 
-bool main_window::poll_event(os::event& event)
+void main_window::main_loop()
 {
-    if (!window.poll_event(event))
-        return false;
+    while (run_state == RUN_STATE_RUNNING) {
+        for (auto event : window.unprocessed_events()) {
+            handle_event(event);
+            camera_controller.handle_event(event);
+        }
 
+        framebuffer.activate();
+        ocean_scene.render();
+        framebuffer.resolve_to_backbuffer();
+
+        window.swap_frame();
+    }
+}
+
+void main_window::handle_event(const os::event& event)
+{
     if (event.is_quit_event()) {
         handle_quit_event();
     } else if (event.is_window_resize_event()) {
@@ -19,15 +36,6 @@ bool main_window::poll_event(os::event& event)
     } else if (event.is_keyboard_event()) {
         handle_keyboard_event(event.get_keyboard_event());
     }
-
-    return true;
-}
-
-void main_window::swap_frame()
-{
-    framebuffer.resolve_to_backbuffer();
-    window.swap_frame();
-    framebuffer.activate();
 }
 
 void main_window::handle_quit_event()

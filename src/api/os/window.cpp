@@ -36,12 +36,12 @@ public:
 
 } // namespace detail
 
-window::window(int width, int height, const char *title)
+window::window(const size& window_size, const char *title)
     : window_handle(nullptr), gl_context(nullptr)
 {
     static detail::window_api window_api;
 
-    window_handle = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    window_handle = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_size.get_width(), window_size.get_height(), SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
     SDL_CHECK(window_handle != nullptr);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, OPENGL_MAJOR);
