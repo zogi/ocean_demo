@@ -6,24 +6,21 @@ using math::real;
 
 namespace scene {
 
-void camera_controller::set_target(camera& target)
+camera_controller::camera_controller(camera& target) : target(target), radius(0)
 {
-    this->target = &target;
     auto camera_vector = target.get_look_at() - target.get_position();
     radius =  math::length(camera_vector);
     orientation = math::spherical_angles(camera_vector);
 }
 
-void camera_controller::set_viewport_size(const math::ivec2& size)
+void camera_controller::set_viewport_size(const os::window::size& size)
 {
-    if (!target) return;
-    target->set_viewport_size(size);
+    target.set_viewport_size(size);
 }
 
 void camera_controller::handle_event(const os::event& event)
 {
     if (event.is_window_resize_event()) {
-        if (!target) return;
         set_viewport_size(event.get_window_size());
     } else if (event.is_mouse_button_event()) {
         handle_mouse_button_event(event.get_mouse_button_event());
@@ -37,7 +34,7 @@ void camera_controller::handle_mouse_button_event(const os::mouse_button_event& 
     if (event.get_mouse_button() != os::mouse_button_event::MOUSE_BUTTON_LEFT)
         return;
 
-    math::vec2 window_size = target->get_viewport_size();
+    math::vec2 window_size = target.get_viewport_size();
     math::vec2 mouse_pos = event.get_mouse_button_pos();
     if (event.is_mouse_button_down()) {
         anchor_pos = mouse_pos / window_size;
@@ -48,13 +45,13 @@ void camera_controller::handle_mouse_button_event(const os::mouse_button_event& 
 
 void camera_controller::handle_mouse_move_event(const os::mouse_move_event& event)
 {
-    math::vec2 window_size = target->get_viewport_size();
+    math::vec2 window_size = target.get_viewport_size();
     math::vec2 mouse_pos = event.get_mouse_move_pos();
     if (event.get_mouse_move_button_state() & os::mouse_move_event::MOUSE_BUTTON_STATE_LEFT) {
         // Rotate view.
         auto new_orientation = spherical_angles_from_mouse_pos(mouse_pos / window_size);
         auto camera_vector = radius * new_orientation.cartesian();
-        target->set_position(target->get_look_at() - camera_vector);
+        target.set_position(target.get_look_at() - camera_vector);
     }
 }
 

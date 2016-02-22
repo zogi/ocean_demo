@@ -14,10 +14,8 @@ public:
     // Normalized mouse position; the coordinates are in [0, 1].
     typedef math::vec2 mouse_pos_norm;
 
-    camera_controller::camera_controller() : target(nullptr), radius(0) {}
-    bool has_target() const { return target != nullptr; }
-    void set_target(camera& target);
-    void set_viewport_size(const math::ivec2& size);
+    camera_controller(camera& target);
+    void set_viewport_size(const os::window::size& size);
 
     void handle_event(const os::event& event);
     void handle_mouse_button_event(const os::mouse_button_event& event);
@@ -26,7 +24,7 @@ public:
 private:
     math::spherical_angles spherical_angles_from_mouse_pos(const mouse_pos_norm& pos);
 
-    camera *target;
+    camera& target;
     math::real radius;
     math::spherical_angles orientation;
     mouse_pos_norm anchor_pos;
