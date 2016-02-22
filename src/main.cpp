@@ -1,10 +1,10 @@
-#include <rendering/main_window.h>
+#include <main_window.h>
 #include <scene/ocean_scene.h>
 #include <util/log.h>
 
 int main(int argc, char *argv[])
 {
-    rendering::main_window main_window(640, 480, "ocean demo", 4);
+    main_window main_window(640, 480, "ocean demo", 4);
 
     gpu::compute compute(main_window.get_graphics_context());
 
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     main_window.attach_camera(ocean_scene.get_main_camera());
 
     LOG("Starting main loop.\n");
-    while (main_window.get_run_state() == rendering::main_window::RUN_STATE_RUNNING) {
+    while (main_window.get_run_state() == main_window::RUN_STATE_RUNNING) {
         main_window.process_events();
         ocean_scene.render();
         main_window.swap_frame();

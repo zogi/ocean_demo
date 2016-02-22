@@ -5,8 +5,6 @@
 #include <rendering/framebuffer.h>
 #include <scene/camera_controller.h>
 
-namespace rendering {
-
 class main_window {
 public:
     enum run_state { RUN_STATE_UNINITIALIZED, RUN_STATE_RUNNING, RUN_STATE_QUITTING };
@@ -37,11 +35,9 @@ private:
 
     os::window window;
     event_handler event_handler;
-    multisample_framebuffer framebuffer;
+    rendering::multisample_framebuffer framebuffer;
     scene::camera_controller main_camera_controller;
     run_state run_state;
 };
-
-} // namespace rendering
 
 #endif // !__MAIN_WINDOW_H_GUARD

@@ -1,6 +1,4 @@
-#include <rendering/main_window.h>
-
-namespace rendering {
+#include <main_window.h>
 
 main_window::main_window(int width, int height, const char *title, int num_framebuffer_samples)
     : window(width, height, title), event_handler(*this),
@@ -77,5 +75,3 @@ void main_window::handle_mouse_move_event(const os::mouse_move_event & event)
         main_camera_controller.mouse_rotate(mouse_pos / window_size);
     }
 }
-
-} // namespace rendering
