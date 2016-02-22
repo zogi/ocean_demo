@@ -7,12 +7,6 @@ main_window::main_window(int width, int height, const char *title, int num_frame
 {
 }
 
-void main_window::attach_camera(scene::camera& camera)
-{
-    camera_controller.set_target(camera);
-    camera_controller.set_viewport_size(window.get_size());
-}
-
 bool main_window::poll_event(os::event& event)
 {
     if (!window.poll_event(event))
@@ -25,8 +19,6 @@ bool main_window::poll_event(os::event& event)
     } else if (event.is_keyboard_event()) {
         handle_keyboard_event(event.get_keyboard_event());
     }
-
-    camera_controller.handle_event(event);
 
     return true;
 }

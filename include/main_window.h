@@ -3,7 +3,6 @@
 
 #include <api/os/window.h>
 #include <rendering/framebuffer.h>
-#include <scene/camera_controller.h>
 
 class main_window {
 public:
@@ -14,7 +13,7 @@ public:
     main_window& operator=(const main_window&) = delete;
 
     void swap_frame();
-    void attach_camera(scene::camera& camera);
+    auto get_size() const { return window.get_size(); }
     run_state get_run_state() const { return run_state; }
     auto get_graphics_context() const { return window.get_graphics_context(); }
 
@@ -52,7 +51,6 @@ private:
 
     os::window window;
     rendering::multisample_framebuffer framebuffer;
-    scene::camera_controller camera_controller;
     run_state run_state;
 };
 

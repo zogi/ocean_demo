@@ -1,4 +1,5 @@
 #include <main_window.h>
+#include <scene/camera_controller.h>
 #include <scene/ocean_scene.h>
 #include <util/log.h>
 
@@ -18,11 +19,15 @@ int main(int argc, char *argv[])
 
     LOG("Initializing Tessendorf heightfield.\n");
     scene::ocean_scene ocean_scene(compute.get_command_queue(), params);
-    main_window.attach_camera(ocean_scene.get_main_camera());
+
+    scene::camera_controller camera_controller;
+    camera_controller.set_target(ocean_scene.get_main_camera());
+    camera_controller.set_viewport_size(main_window.get_size());
 
     LOG("Starting main loop.\n");
     while (main_window.get_run_state() == main_window::RUN_STATE_RUNNING) {
         for (auto event : main_window.unprocessed_events()) {
+            camera_controller.handle_event(event);
         }
         ocean_scene.render();
         main_window.swap_frame();
