@@ -15,8 +15,9 @@ constexpr gpu::graphics::texture_unit sky_cubemap_tex_unit = 2;
 } // unnamed namespace
 
 
-ocean_scene::ocean_scene(gpu::compute::command_queue queue, const ocean::surface_params& params)
-  : ocean_surface(queue, params)
+ocean_scene::ocean_scene(gpu::compute::command_queue queue, const ocean::surface_params& surface_params, const rendering::rendering_params& rendering_params)
+  : rendering_params(rendering_params),
+    ocean_surface(queue, surface_params)
 {
     main_camera.set_look_at(math::vec3(0, 1, 0));
     main_camera.set_position(math::vec3(0, 4, 6));
@@ -29,8 +30,8 @@ ocean_scene::ocean_scene(gpu::compute::command_queue queue, const ocean::surface
 
     ocean_effect.load_shaders("shaders/ocean.glsl", VERTEX | GEOMETRY | FRAGMENT);
     ocean_effect.use();
-    ocean_effect.set_parameter("units_per_meter", params.tile_size_logical / params.tile_size_physical);
-    ocean_effect.set_parameter("tile_size_logical", params.tile_size_logical);
+    ocean_effect.set_parameter("units_per_meter", surface_params.tile_size_logical / surface_params.tile_size_physical);
+    ocean_effect.set_parameter("tile_size_logical", surface_params.tile_size_logical);
     ocean_effect.set_parameter("displacement_tex", ocean_displacement_tex_unit);
     ocean_effect.set_parameter("d_height_tex", ocean_height_deriv_tex_unit);
     ocean_effect.set_parameter("sky_env", sky_cubemap_tex_unit);

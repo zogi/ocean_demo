@@ -4,7 +4,7 @@ main_window::main_window(const rendering::rendering_params& rendering_params, co
   : window("ocean demo", os::window::size(1024, 768), SDL_WINDOW_MAXIMIZED),
     queue(gpu::compute::init(window.get_graphics_context())),
     framebuffer(window.get_size().x, window.get_size().y, rendering_params.multisampling_sample_count),
-    ocean_scene(queue, ocean_params), // TODO: pass rendering params to ctor. Then the camera should only store aspect and not viewport size.
+    ocean_scene(queue, ocean_params, rendering_params),
     camera_controller(ocean_scene.get_main_camera()),
     run_state(RUN_STATE_RUNNING)
 {

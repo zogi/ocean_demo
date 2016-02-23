@@ -7,6 +7,7 @@
 #include <ocean/surface_params.h>
 #include <rendering/cubemap.h>
 #include <rendering/quad.h>
+#include <rendering/rendering_params.h>
 #include <rendering/shader_effect.h>
 #include <scene/camera.h>
 
@@ -14,7 +15,7 @@ namespace scene {
 
 class ocean_scene {
 public:
-    ocean_scene(gpu::compute::command_queue queue, const ocean::surface_params& params);
+    ocean_scene(gpu::compute::command_queue queue, const ocean::surface_params& surface_params, const rendering::rendering_params& rendering_params);
     ocean_scene(const ocean_scene&) = delete;
     ocean_scene& operator=(const ocean_scene&) = delete;
 
@@ -23,6 +24,7 @@ public:
     const camera& get_main_camera() const { return main_camera; }
 
 private:
+    rendering::rendering_params rendering_params;
     camera main_camera;
     rendering::quad unit_quad;
 
