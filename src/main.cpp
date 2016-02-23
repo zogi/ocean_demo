@@ -7,7 +7,7 @@
 int main(int argc, char *argv[])
 {
     rendering::rendering_params rendering_params;
-    rendering_params.max_texture_anisotropy = 2;
+    rendering_params.texture_max_anisotropy = 2;
     rendering_params.multisampling_sample_count = 4;
 
     ocean::surface_params ocean_params;

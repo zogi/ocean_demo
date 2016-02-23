@@ -7,7 +7,7 @@ namespace rendering {
 
 struct rendering_params {
     int multisampling_sample_count;
-    float max_texture_anisotropy;
+    float texture_max_anisotropy;
 };
 
 } // namespace rendering
