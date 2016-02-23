@@ -5,9 +5,9 @@
 #include <ocean/surface_geometry.h>
 #include <ocean/spectrum.h>
 #include <ocean/surface_params.h>
+#include <rendering/cubemap.h>
 #include <rendering/quad.h>
 #include <rendering/shader_effect.h>
-#include <rendering/cubemap.h>
 #include <scene/camera.h>
 
 namespace scene {
