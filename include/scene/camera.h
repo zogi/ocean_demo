@@ -9,7 +9,7 @@ namespace scene {
 class camera {
 public:
     camera() : position(0, 0, -1), look_at(0, 0, 0), up_vector(0, 1, 0),
-               fov_y(math::half_pi), z_near(1), z_far(10000) {}
+               viewport_size(1, 1), fov_y(math::pi * math::real(0.5)), z_near(0.5), z_far(10000) {}
 
     const math::vec3& get_position() const { return position; }
     const math::vec3& get_look_at() const { return look_at; }

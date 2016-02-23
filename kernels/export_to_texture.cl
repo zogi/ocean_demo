@@ -1,6 +1,6 @@
-#define MAX_DISPLACEMENT_X 1.0f
-#define MAX_DISPLACEMENT_Y 1.0f
-#define MAX_DISPLACEMENT_Z 1.0f
+#define MAX_DISPLACEMENT_X 5.0f
+#define MAX_DISPLACEMENT_Y 5.0f
+#define MAX_DISPLACEMENT_Z 5.0f
 
 float map_to_unorm(float x, float max_mag) {
     return (x + max_mag) / (2.0f * max_mag);

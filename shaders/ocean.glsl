@@ -14,7 +14,7 @@
 // The displacement is encoded in the RGB channels of the displacement texture map as a fraction of max_displacement, so
 //   displacement = displacement_tex_sample * max_displacement
 uniform sampler2D displacement_tex;
-uniform vec3 max_displacement = vec3(1, 1, 1);
+uniform vec3 max_displacement = vec3(5, 5, 5);
 uniform vec3 units_per_meter;    // rendering units per displacement_map units (i.e. meters)
 uniform vec3 tile_size_logical;  // in rendering units
 

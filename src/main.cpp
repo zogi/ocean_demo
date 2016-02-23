@@ -9,14 +9,14 @@ int main(int argc, char *argv[])
     rendering::rendering_params rendering_params;
     rendering_params.texture_max_anisotropy = 2;
     rendering_params.multisampling_sample_count = 4;
-    rendering_params.projected_grid_size_factor = math::vec2(0.25f, 0.25f); // relative to window size
+    rendering_params.projected_grid_size_factor = math::vec2(0.5f, 0.5f); // relative to window size
 
     ocean::surface_params ocean_params;
-    ocean_params.fft_size = math::ivec2(512, 512);
-    ocean_params.tile_size_logical = math::vec3(10, 10, 10);
-    ocean_params.tile_size_physical = math::vec3(20, 20, 20);
-    ocean_params.amplitude_factor = 1.0e-3f;
-    ocean_params.wavelength_low_threshold = math::real(0.25);
+    ocean_params.fft_size = math::ivec2(1024, 1024);
+    ocean_params.tile_size_logical = math::vec3(100, 100, 100);
+    ocean_params.tile_size_physical = math::vec3(200, 200, 200);
+    ocean_params.amplitude_factor = 2.0e-6f;
+    ocean_params.wavelength_low_threshold = math::real(0.2);
     ocean_params.set_wind_vector(math::vec2(15, 0));
 
     main_window main_window(rendering_params, ocean_params);
