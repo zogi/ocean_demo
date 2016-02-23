@@ -30,7 +30,6 @@ surface_geometry::surface_geometry(gpu::compute::command_queue queue, const surf
 surface_geometry::shared_texture::shared_texture(gpu::compute::context& context, math::ivec2 size, texture_format format)
 {
     tex.init(size.x, size.y, format);
-    tex.set_max_anisotropy(2);
     img = gpu::compute::graphics_image(context, CL_MEM_WRITE_ONLY, GL_TEXTURE_2D, 0, tex.get_api_texture());
     tex.generate_mipmap();
 }

@@ -21,6 +21,7 @@ public:
     void enqueue_generate(math::real time, const gpu::compute::event_vector *wait_events = nullptr);
     void bind_displacement_texture(gpu::graphics::texture_unit tex_unit) { displacement_map.tex.bind(tex_unit); }
     void bind_height_gradient_texture(gpu::graphics::texture_unit tex_unit) { height_gradient_map.tex.bind(tex_unit); }
+    inline void set_texture_max_anisotropy(float max_anisotropy);
 
 private:
     typedef rendering::texture_2d::texture_format texture_format;
@@ -40,6 +41,12 @@ private:
     gpu::compute::kernel export_kernel;
     shared_texture displacement_map, height_gradient_map;
 };
+
+void surface_geometry::set_texture_max_anisotropy(float max_anisotropy)
+{
+    displacement_map.tex.set_max_anisotropy(max_anisotropy);
+    height_gradient_map.tex.set_max_anisotropy(max_anisotropy);
+}
 
 } // namespace ocean
 

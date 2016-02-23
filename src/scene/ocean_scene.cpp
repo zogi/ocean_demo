@@ -25,6 +25,7 @@ ocean_scene::ocean_scene(gpu::compute::command_queue queue, const ocean::surface
     unit_quad.init();
 
     // Ocean
+    ocean_surface.set_texture_max_anisotropy(rendering_params.max_texture_anisotropy);
     ocean_surface.bind_displacement_texture(ocean_displacement_tex_unit);
     ocean_surface.bind_height_gradient_texture(ocean_height_deriv_tex_unit);
 
