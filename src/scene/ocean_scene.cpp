@@ -71,7 +71,7 @@ void ocean_scene::render()
     // Ocean
     auto proj_view_world = main_camera.get_proj_view_matrix();
     auto viewport_size = main_camera.get_viewport_size();
-    math::ivec2 grid_dim = viewport_size / 4;
+    math::ivec2 grid_dim = math::vec2(viewport_size) * rendering_params.projected_grid_size_factor;
 
     ocean_effect.use();
     ocean_effect.set_parameter("camera.internal.viewport_size", viewport_size);

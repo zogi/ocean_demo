@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
     rendering::rendering_params rendering_params;
     rendering_params.texture_max_anisotropy = 2;
     rendering_params.multisampling_sample_count = 4;
+    rendering_params.projected_grid_size_factor = math::vec2(0.25f, 0.25f); // relative to window size
 
     ocean::surface_params ocean_params;
     ocean_params.fft_size = math::ivec2(512, 512);
