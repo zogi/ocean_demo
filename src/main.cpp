@@ -11,9 +11,9 @@ int main(int argc, char *argv[])
     rendering_params.multisampling_sample_count = 4;
 
     ocean::surface_params ocean_params;
+    ocean_params.fft_size = math::ivec2(512, 512);
     ocean_params.tile_size_logical = math::vec3(10, 10, 10);
     ocean_params.tile_size_physical = math::vec3(20, 20, 20);
-    ocean_params.grid_size = math::ivec2(512, 512);
     ocean_params.amplitude_factor = 1.0e-3f;
     ocean_params.wavelength_low_threshold = math::real(0.25);
     ocean_params.set_wind_vector(math::vec2(15, 0));

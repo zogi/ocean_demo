@@ -10,10 +10,10 @@ namespace ocean {
 surface_geometry::surface_geometry(gpu::compute::command_queue queue, const surface_params& params)
   : queue(queue),
     wave_spectrum(queue.getInfo<CL_QUEUE_CONTEXT>(), params),
-    fft_algorithm(queue, params.grid_size, N_FFT_BATCHES),
-    fft_buffer(queue.getInfo<CL_QUEUE_CONTEXT>(), CL_MEM_READ_ONLY, N_FFT_BATCHES * (params.grid_size.x + 2) * params.grid_size.y * sizeof(float)),
-    displacement_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.grid_size, texture_format::TEXTURE_FORMAT_RGBA8),
-    height_gradient_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.grid_size, texture_format::TEXTURE_FORMAT_RG16F)
+    fft_algorithm(queue, params.fft_size, N_FFT_BATCHES),
+    fft_buffer(queue.getInfo<CL_QUEUE_CONTEXT>(), CL_MEM_READ_ONLY, N_FFT_BATCHES * (params.fft_size.x + 2) * params.fft_size.y * sizeof(float)),
+    displacement_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.fft_size, texture_format::TEXTURE_FORMAT_RGBA8),
+    height_gradient_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.fft_size, texture_format::TEXTURE_FORMAT_RG16F)
 {
     // Load export kernel.
     auto program = gpu::compute::create_program_from_file(queue.getInfo<CL_QUEUE_CONTEXT>(), "kernels/export_to_texture.cl");
@@ -21,8 +21,8 @@ surface_geometry::surface_geometry(gpu::compute::command_queue queue, const surf
 
     // Set static export kernel parameters.
     export_kernel.setArg(0, fft_buffer);
-    export_kernel.setArg(1, params.grid_size.x);
-    export_kernel.setArg(2, params.grid_size.y);
+    export_kernel.setArg(1, params.fft_size.x);
+    export_kernel.setArg(2, params.fft_size.y);
     export_kernel.setArg(3, displacement_map.img);
     export_kernel.setArg(4, height_gradient_map.img);
 }
@@ -54,7 +54,7 @@ gpu::compute::event surface_geometry::enqueue_export_kernel(const gpu::compute::
 
     queue.enqueueAcquireGLObjects(&gl_objects, wait_events, &event);
     gpu::compute::nd_range offset = { 0, 0 }, local_size = { 1, 1 };
-    auto size = wave_spectrum.get_params().grid_size;
+    auto size = wave_spectrum.get_params().fft_size;
     gpu::compute::nd_range global_size = { cl::size_type(size.x), cl::size_type(size.y) };
     queue.enqueueNDRangeKernel(export_kernel, offset, global_size, local_size, &gpu::compute::event_vector({ event }), &event);
     queue.enqueueReleaseGLObjects(&gl_objects, &gpu::compute::event_vector({ event }), &event);

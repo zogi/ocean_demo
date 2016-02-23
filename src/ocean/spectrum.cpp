@@ -26,7 +26,7 @@ gpu::compute::event spectrum::enqueue_generate(gpu::compute::command_queue queue
     phase_shift_kernel.setArg(6, output_buffer);
 
     auto offset = gpu::compute::nd_range(0, 0);
-    auto global_size = gpu::compute::nd_range(params.grid_size.x / 2 + 1, params.grid_size.y);
+    auto global_size = gpu::compute::nd_range(params.fft_size.x / 2 + 1, params.fft_size.y);
     auto local_size = gpu::compute::nd_range(1, 1);
     gpu::compute::event event;
     queue.enqueueNDRangeKernel(phase_shift_kernel, offset, global_size, local_size, wait_events, &event);
@@ -36,15 +36,15 @@ gpu::compute::event spectrum::enqueue_generate(gpu::compute::command_queue queue
 
 void spectrum::set_initial_spectrum(gpu::compute::context context)
 {
-    int elem_count = (params.grid_size.x / 2 + 1) * params.grid_size.y * 2;
+    int elem_count = (params.fft_size.x / 2 + 1) * params.fft_size.y * 2;
     std::vector<real> data(elem_count);
     std::default_random_engine gen(0);
     std::normal_distribution<real> dist;
 
     // Generate the 2D Fourier coefficients of the ocean heightfield.
     int idx = 0;
-    for (int j = 0; j < params.grid_size.y; ++j) {
-        for (int i = 0; i <= params.grid_size.x / 2; ++i) {
+    for (int j = 0; j < params.fft_size.y; ++j) {
+        for (int i = 0; i <= params.fft_size.x / 2; ++i) {
             real p = phillips_spectrum(i, j);
             real mag = sqrt(p * real(0.5));
             data[idx++] = mag * dist(gen); // real part
@@ -64,13 +64,13 @@ void spectrum::load_phase_shift_kernel(gpu::compute::context context)
     phase_shift_kernel.setArg(0, initial_spectrum);
     phase_shift_kernel.setArg(1, params.tile_size_physical.x);
     phase_shift_kernel.setArg(2, params.tile_size_physical.z);
-    phase_shift_kernel.setArg(3, params.grid_size.x);
-    phase_shift_kernel.setArg(4, params.grid_size.y);
+    phase_shift_kernel.setArg(3, params.fft_size.x);
+    phase_shift_kernel.setArg(4, params.fft_size.y);
 }
 
 real spectrum::phillips_spectrum(int i, int j)
 {
-    int N = params.grid_size.x, M = params.grid_size.y;
+    int N = params.fft_size.x, M = params.fft_size.y;
     int ii = (i + N / 2) % N - N / 2;
     int jj = (j + M / 2) % M - M / 2;
     real k_x = 2.0f * math::pi * real(ii) / params.tile_size_physical.x;
