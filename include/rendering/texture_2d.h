@@ -14,6 +14,11 @@ public:
 
     texture_2d() : tex() {}
     ~texture_2d() { glDeleteTextures(1, &tex); }
+    texture_2d(const texture_2d&) = delete;
+    texture_2d(texture_2d&& texture) : tex(texture.tex) { texture.tex = 0; }
+    texture_2d& operator=(const texture_2d&) = delete;
+    texture_2d& operator=(texture_2d&& texture) { tex = texture.tex; texture.tex = 0; return *this; }
+
     void init(size_t width, size_t height, texture_format format);
     void set_mag_filter(mag_filter mag_filter) { glTextureParameteri(tex, GL_TEXTURE_MAG_FILTER, mag_filter); }
     void set_min_filter(min_filter min_filter) { glTextureParameteri(tex, GL_TEXTURE_MIN_FILTER, min_filter); }
