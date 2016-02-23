@@ -1,5 +1,7 @@
 #include <main_window.h>
 
+#include <util/timing.h>
+
 main_window::main_window(const rendering::rendering_params& rendering_params, const ocean::surface_params& ocean_params)
   : window("ocean demo", os::window::size(1024, 768), SDL_WINDOW_MAXIMIZED),
     queue(gpu::compute::init(window.get_graphics_context())),
@@ -13,6 +15,9 @@ main_window::main_window(const rendering::rendering_params& rendering_params, co
 
 void main_window::main_loop()
 {
+    double multisample_resolve_milliseconds;
+    util::graphics_timer timer;
+
     while (run_state == RUN_STATE_RUNNING) {
         for (auto event : window.unprocessed_events()) {
             handle_event(event);
@@ -21,7 +26,11 @@ void main_window::main_loop()
 
         framebuffer.activate();
         ocean_scene.render();
-        framebuffer.resolve_to_backbuffer();
+
+        {
+            auto resolve_timer = util::scoped_timer(timer, multisample_resolve_milliseconds);
+            framebuffer.resolve_to_backbuffer();
+        }
 
         window.swap_frame();
     }

@@ -9,6 +9,7 @@
 #include <rendering/rendering_params.h>
 #include <rendering/shader_effect.h>
 #include <scene/camera.h>
+#include <util/timing.h>
 
 namespace scene {
 
@@ -22,6 +23,12 @@ public:
     camera& get_main_camera() { return main_camera; }
     const camera& get_main_camera() const { return main_camera; }
 
+    struct timing_data {
+        double render_milliseconds;
+        double ocean_drawcall_milliseconds;
+    };
+    const timing_data& get_timing_data() const { return timings; }
+
 private:
     rendering::rendering_params rendering_params;
     camera main_camera;
@@ -32,6 +39,9 @@ private:
 
     rendering::shader_effect sky_effect;
     rendering::cubemap sky_env;
+
+    util::graphics_timer timer;
+    timing_data timings;
 };
 
 } // namespace scene

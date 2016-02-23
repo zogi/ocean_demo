@@ -57,6 +57,8 @@ void ocean_scene::render()
 
     ocean_surface.enqueue_generate(time);
 
+    timer.start();
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     auto camera_orientation = math::transpose(math::mat3(main_camera.get_view_matrix()));
@@ -82,7 +84,15 @@ void ocean_scene::render()
     ocean_effect.set_parameter("camera.model_transform.orientation", camera_orientation);
     ocean_effect.set_parameter("grid_dim", grid_dim);
     ocean_effect.set_parameter("proj_view_world_transform", proj_view_world);
-    unit_quad.draw_instanced(grid_dim.x * grid_dim.y);
+
+    double render_except_ocean_drawcall = timer.stop_and_get_milliseconds();
+
+    {
+        auto ocean_timer = util::scoped_timer(timer, timings.ocean_drawcall_milliseconds);
+        unit_quad.draw_instanced(grid_dim.x * grid_dim.y);
+    }
+
+    timings.render_milliseconds = render_except_ocean_drawcall + timings.ocean_drawcall_milliseconds;
 }
 
 } // namespace scene
