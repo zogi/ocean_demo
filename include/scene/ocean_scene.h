@@ -3,7 +3,6 @@
 
 #include <api/math.h>
 #include <ocean/surface_geometry.h>
-#include <ocean/spectrum.h>
 #include <ocean/surface_params.h>
 #include <rendering/cubemap.h>
 #include <rendering/quad.h>
