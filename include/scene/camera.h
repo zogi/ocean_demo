@@ -20,7 +20,7 @@ public:
 
     math::ivec2 get_viewport_size() const { return viewport_size; }
     math::real get_aspect() const { return math::real(viewport_size.x) / math::real(viewport_size.y); }
-    math::vec2 get_eye_size() const { auto hgt = math::real(2) / math::tan(math::real(0.5) * fov_y); return { hgt * get_aspect(), hgt }; }
+    math::vec2 get_eye_size() const { auto hgt = math::real(2) * math::tan(math::real(0.5) * fov_y); return { hgt * get_aspect(), hgt }; }
     math::real get_fov_y() const { return fov_y; }
     math::real get_z_near() const { return z_near; }
     math::real get_z_far() const { return z_far; }
