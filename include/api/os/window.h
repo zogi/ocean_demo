@@ -12,7 +12,7 @@ public:
     typedef os::window_size size;
     typedef SDL_GLContext graphics_context;
 
-    window(const size& window_size, const char *title);
+    window(const char *title, const size& window_size, Uint32 sdl_window_flags = 0);
     ~window();
     window(const window&) = delete;
     window& operator=(const window&) = delete;

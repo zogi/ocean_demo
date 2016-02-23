@@ -14,7 +14,7 @@ public:
     typedef os::window::size size;
     enum run_state { RUN_STATE_UNINITIALIZED, RUN_STATE_RUNNING, RUN_STATE_QUITTING };
 
-    main_window(const size& window_size, const rendering::rendering_params& rendering_params, const ocean::surface_params& ocean_params);
+    main_window(const rendering::rendering_params& rendering_params, const ocean::surface_params& ocean_params);
     main_window(const main_window&) = delete;
     main_window& operator=(const main_window&) = delete;
 

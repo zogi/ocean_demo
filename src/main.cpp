@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     ocean_params.wavelength_low_threshold = math::real(0.25);
     ocean_params.set_wind_vector(math::vec2(15, 0));
 
-    main_window main_window(os::window::size(1024, 768), rendering_params, ocean_params);
+    main_window main_window(rendering_params, ocean_params);
 
     main_window.main_loop();
 
