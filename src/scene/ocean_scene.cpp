@@ -20,7 +20,7 @@ ocean_scene::ocean_scene(gpu::compute::command_queue queue, const ocean::surface
     ocean_surface(queue, surface_params)
 {
     main_camera.set_look_at(math::vec3(0, 1, 0));
-    main_camera.set_position(math::vec3(0, 4, 6));
+    main_camera.set_position(math::vec3(0, 20, 30));
 
     unit_quad.init();
 
@@ -46,7 +46,6 @@ ocean_scene::ocean_scene(gpu::compute::command_queue queue, const ocean::surface
     sky_effect.set_z_write_state(false);
     sky_effect.use();
     sky_effect.set_parameter("sky_env", sky_cubemap_tex_unit);
-
 }
 
 void ocean_scene::render()
