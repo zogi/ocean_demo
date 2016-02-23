@@ -12,7 +12,7 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 
 find_package(SDL2_ttf REQUIRED)
-include_directories(${SDL2_ttf_INCLUDE_DIR})
+include_directories(${SDL2_TTF_INCLUDE_DIR})
 
 find_package(OpenGL REQUIRED)
 include_directories(${OpenGL_INCLUDE_DIRS})
@@ -43,4 +43,4 @@ include_directories(include)
 
 add_executable(cl_tessendorf ${HEADERS} ${SOURCES})
 target_link_libraries(cl_tessendorf ${OpenCL_LIBRARY} ${CLFFT_LIBRARIES}
-    ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} ${SDL2_LIBRARY} ${IL_LIBRARIES} ${ILU_LIBRARIES})
+    ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ${IL_LIBRARIES} ${ILU_LIBRARIES})
