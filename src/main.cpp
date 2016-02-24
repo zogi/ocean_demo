@@ -15,8 +15,8 @@ int main(int argc, char *argv[])
     ocean_params.fft_size = math::ivec2(1024, 1024);
     ocean_params.tile_size_logical = math::vec3(100, 100, 100);
     ocean_params.tile_size_physical = math::vec3(200, 200, 200);
-    ocean_params.amplitude_factor = 2.0e-6f;
-    ocean_params.wavelength_low_threshold = math::real(0.3);
+    ocean_params.amplitude_factor = 3.0e-6f;
+    ocean_params.wavelength_low_threshold = math::real(0.5);
     ocean_params.set_wind_vector(math::vec2(15, 0));
 
     main_window main_window(rendering_params, ocean_params);
