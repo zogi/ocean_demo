@@ -27,7 +27,7 @@ texture_2d::texture_2d(size_t width, size_t height, texture_format format, const
     glTexImage2D(GL_TEXTURE_2D, 0, format, GLsizei(width), GLsizei(height), 0, traits.format, traits.type, data);
     set_mag_filter(MAG_FILTER_LINEAR);
     set_min_filter(MIN_FILTER_MIPMAP);
-    set_wrap_mode(WRAP_MODE_REPEAT);
+    set_wrap_mode(WRAP_MODE_CLAMP_TO_EDGE);
 }
 
 } // namespace rendering
