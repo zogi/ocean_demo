@@ -13,7 +13,7 @@ camera_controller::camera_controller(camera& target) : target(target), radius(0)
     orientation = math::spherical_angles(camera_vector);
 }
 
-void camera_controller::set_viewport_size(const os::window::size& size)
+void camera_controller::set_viewport_size(const util::extent& size)
 {
     target.set_viewport_size(size);
 }

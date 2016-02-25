@@ -36,7 +36,7 @@ public:
 
 } // namespace detail
 
-window::window(const char *title, const size& window_size, Uint32 sdl_window_flags)
+window::window(const char *title, const util::extent& window_size, Uint32 sdl_window_flags)
   : window_handle(nullptr), gl_context(nullptr)
 {
     static detail::window_api window_api;

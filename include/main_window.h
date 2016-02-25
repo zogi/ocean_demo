@@ -11,7 +11,6 @@
 
 class main_window {
 public:
-    typedef os::window::size size;
     enum run_state { RUN_STATE_UNINITIALIZED, RUN_STATE_RUNNING, RUN_STATE_QUITTING };
 
     main_window(const rendering::rendering_params& rendering_params, const ocean::surface_params& ocean_params);
@@ -19,12 +18,12 @@ public:
     main_window& operator=(const main_window&) = delete;
 
     void main_loop();
-    size get_size() const { return window.get_size(); }
+    util::extent get_extent() const { return window.get_extent(); }
 
 private:
     void handle_event(const os::event& event);
     void handle_quit_event();
-    void handle_resize_event(const os::window::size& size);
+    void handle_resize_event(const util::extent& new_extent);
     void handle_keyboard_event(const os::keyboard_event& event);
 
     os::window window;

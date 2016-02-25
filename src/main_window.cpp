@@ -3,14 +3,14 @@
 #include <util/timing.h>
 
 main_window::main_window(const rendering::rendering_params& rendering_params, const ocean::surface_params& ocean_params)
-  : window("ocean demo", os::window::size(1024, 768), SDL_WINDOW_MAXIMIZED),
+  : window("ocean demo", util::extent(1024, 768), SDL_WINDOW_MAXIMIZED),
     queue(gpu::compute::init(window.get_graphics_context())),
-    framebuffer(window.get_size().width, window.get_size().height, rendering_params.multisampling_sample_count),
+    framebuffer(window.get_extent().width, window.get_extent().height, rendering_params.multisampling_sample_count),
     ocean_scene(queue, ocean_params, rendering_params),
     camera_controller(ocean_scene.get_main_camera()),
     run_state(RUN_STATE_RUNNING)
 {
-    camera_controller.set_viewport_size(get_size());
+    camera_controller.set_viewport_size(get_extent());
 }
 
 void main_window::main_loop()
@@ -53,7 +53,7 @@ void main_window::handle_quit_event()
     run_state = RUN_STATE_QUITTING;
 }
 
-void main_window::handle_resize_event(const os::window::size& size)
+void main_window::handle_resize_event(const util::extent& size)
 {
     gpu::graphics::set_viewport_size(size.width, size.height);
     framebuffer.resize(size.width, size.height);

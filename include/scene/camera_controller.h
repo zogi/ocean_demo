@@ -15,7 +15,7 @@ public:
     typedef math::vec2 mouse_pos_norm;
 
     camera_controller(camera& target);
-    void set_viewport_size(const os::window::size& size);
+    void set_viewport_size(const util::extent& size);
 
     void handle_event(const os::event& event);
     void handle_mouse_button_event(const os::mouse_button_event& event);
