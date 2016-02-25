@@ -15,7 +15,7 @@ std::string read_file_contents(const std::string& filename)
 
         return buffer.str();
     }
-    DIE("File not found: %s.\n", filename);
+    DIE("File not found: %s.\n", filename.c_str());
     return "";
 }
 
