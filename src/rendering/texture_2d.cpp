@@ -19,7 +19,7 @@ std::unordered_map<texture_2d::texture_format, texture_format_traits> format_tra
 
 } // unnamed namespace
 
-void texture_2d::init(size_t width, size_t height, texture_format format)
+texture_2d::texture_2d(size_t width, size_t height, texture_format format)
 {
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
