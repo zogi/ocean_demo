@@ -54,7 +54,7 @@ template <> struct clfft_precision<double> { static constexpr auto value = CLFFT
 
 } // namespace detail
 
-ifft2d_hermitian_inplace::ifft2d_hermitian_inplace(gpu::compute::command_queue queue, math::ivec2 size, size_t num_batches)
+ifft2d_hermitian_inplace::ifft2d_hermitian_inplace(gpu::compute::command_queue queue, const math::ivec2& size, size_t num_batches)
 {
     static detail::fft_api fft_api;
     size_t N = size.x;

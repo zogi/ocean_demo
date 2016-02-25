@@ -14,7 +14,7 @@ typedef clfftPlanHandle plan_handle;
 
 class ifft2d_hermitian_inplace {
 public:
-    ifft2d_hermitian_inplace(gpu::compute::command_queue queue, math::ivec2 size, size_t num_batches);
+    ifft2d_hermitian_inplace(gpu::compute::command_queue queue, const math::ivec2& size, size_t num_batches);
     ~ifft2d_hermitian_inplace();
     ifft2d_hermitian_inplace(const ifft2d_hermitian_inplace&) = delete;
     ifft2d_hermitian_inplace& operator=(const ifft2d_hermitian_inplace&) = delete;
