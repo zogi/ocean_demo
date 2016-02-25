@@ -10,8 +10,8 @@ namespace gpu {
 namespace graphics {
 
 #define OPENGL_MAJOR 4
-#define OPENGL_MINOR 0
-#define GLSL_VERSION_STRING "400"
+#define OPENGL_MINOR 3
+#define GLSL_VERSION_STRING "430"
 
 typedef GLuint texture;
 typedef GLuint framebuffer;
