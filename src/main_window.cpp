@@ -5,7 +5,7 @@
 main_window::main_window(const rendering::rendering_params& rendering_params, const ocean::surface_params& ocean_params)
   : window("ocean demo", os::window::size(1024, 768), SDL_WINDOW_MAXIMIZED),
     queue(gpu::compute::init(window.get_graphics_context())),
-    framebuffer(window.get_size().x, window.get_size().y, rendering_params.multisampling_sample_count),
+    framebuffer(window.get_size().width, window.get_size().height, rendering_params.multisampling_sample_count),
     ocean_scene(queue, ocean_params, rendering_params),
     camera_controller(ocean_scene.get_main_camera()),
     run_state(RUN_STATE_RUNNING)
@@ -55,8 +55,8 @@ void main_window::handle_quit_event()
 
 void main_window::handle_resize_event(const os::window::size& size)
 {
-    gpu::graphics::set_viewport_size(size.get_width(), size.get_height());
-    framebuffer.resize(size.get_width(), size.get_height());
+    gpu::graphics::set_viewport_size(size.width, size.height);
+    framebuffer.resize(size.width, size.height);
 }
 
 void main_window::handle_keyboard_event(const os::keyboard_event& event)

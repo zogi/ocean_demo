@@ -4,6 +4,7 @@
 #include <utility>
 #include <SDL_events.h>
 #include <api/math.h>
+#include <util/rect.h>
 
 namespace os {
 
@@ -69,16 +70,6 @@ private:
     const api::event& api_event;
 };
 
-struct window_size : math::ivec2
-{
-    typedef math::ivec2 super;
-    typedef super::value_type value_type;
-
-    window_size(value_type width, value_type height) : super(width, height) {}
-    value_type get_width() const { return x; }
-    value_type get_height() const { return y; }
-};
-
 class window;
 
 class event {
@@ -94,7 +85,7 @@ public:
     keyboard_event get_keyboard_event() const { return keyboard_event(api_event); }
     mouse_button_event get_mouse_button_event() const { return mouse_button_event(api_event); }
     mouse_move_event get_mouse_move_event() const { return mouse_move_event(api_event); }
-    window_size get_window_size() const { return { api_event.window.data1, api_event.window.data2 }; }
+    util::extent get_window_size() const { return { api_event.window.data1, api_event.window.data2 }; }
 
 private:
     friend class window;

@@ -42,7 +42,7 @@ window::window(const char *title, const size& window_size, Uint32 sdl_window_fla
     static detail::window_api window_api;
 
     window_handle = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                     window_size.get_width(), window_size.get_height(),
+                                     window_size.width, window_size.height,
                                      SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | sdl_window_flags);
     SDL_CHECK(window_handle != nullptr);
 

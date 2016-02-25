@@ -4,12 +4,13 @@
 #include <SDL.h>
 #include <SDL_video.h>
 #include <api/os/event.h>
+#include <util/rect.h>
 
 namespace os {
 
 class window {
 public:
-    typedef os::window_size size;
+    typedef util::extent size;
     typedef SDL_GLContext graphics_context;
 
     window(const char *title, const size& window_size, Uint32 sdl_window_flags = 0);

@@ -3,6 +3,7 @@
 
 #include <api/math.h>
 #include <api/gpu/graphics.h>
+#include <util/rect.h>
 
 namespace rendering {
 
@@ -109,6 +110,16 @@ template<> inline void shader_effect::set_parameter<math::mat4>(const char *para
     GL_CHECK();
 }
 
+template<> inline void shader_effect::set_parameter<util::offset>(const char *param_name, const util::offset& value) const
+{
+    glUniform2i(get_param_location(param_name), value.x, value.y);
+    GL_CHECK();
+}
+template<> inline void shader_effect::set_parameter<util::extent>(const char *param_name, const util::extent& value) const
+{
+    glUniform2i(get_param_location(param_name), value.width, value.height);
+    GL_CHECK();
+}
 } // namespace rendering
 
 #endif // !__SHADER_EFFECT_H_GUARD

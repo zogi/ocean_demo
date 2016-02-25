@@ -22,6 +22,7 @@ public:
     void handle_mouse_move_event(const os::mouse_move_event & event);
 
 private:
+    math::vec2 get_normalized_mouse_pos(const math::ivec2& mouse_pos);
     math::spherical_angles spherical_angles_from_mouse_pos(const mouse_pos_norm& pos);
 
     camera& target;

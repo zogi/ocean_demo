@@ -3,6 +3,7 @@
 
 #include <api/math.h>
 #include <util/cached_data.h>
+#include <util/rect.h>
 
 namespace scene {
 
@@ -18,13 +19,13 @@ public:
     void set_look_at(math::vec3 look_at) { invalidate_view_matrix(); this->look_at = look_at; }
     void set_up_vector(math::vec3 up_vector) { invalidate_view_matrix(); this->up_vector = up_vector; }
 
-    math::ivec2 get_viewport_size() const { return viewport_size; }
-    math::real get_aspect() const { return math::real(viewport_size.x) / math::real(viewport_size.y); }
+    util::extent get_viewport_size() const { return viewport_size; }
+    math::real get_aspect() const { return math::real(viewport_size.width) / math::real(viewport_size.height); }
     math::vec2 get_eye_size() const { auto hgt = math::real(2) * math::tan(math::real(0.5) * fov_y); return { hgt * get_aspect(), hgt }; }
     math::real get_fov_y() const { return fov_y; }
     math::real get_z_near() const { return z_near; }
     math::real get_z_far() const { return z_far; }
-    void set_viewport_size(math::ivec2 viewport_size) { invalidate_proj_matrix(); this->viewport_size = viewport_size; }
+    void set_viewport_size(util::extent viewport_size) { invalidate_proj_matrix(); this->viewport_size = viewport_size; }
     void set_fov_y(math::real fov) { invalidate_proj_matrix(); this->fov_y = fov; }
     void set_z_near(math::real z_near) { invalidate_proj_matrix(); this->z_near = z_near; }
     void set_z_far(math::real z_far) { invalidate_proj_matrix(); this->z_far = z_far; }
@@ -42,7 +43,7 @@ private:
     math::vec3 position;
     math::vec3 look_at;
     math::vec3 up_vector;
-    math::ivec2 viewport_size;
+    util::extent viewport_size;
     math::real fov_y; // radians
     math::real z_near, z_far;
 

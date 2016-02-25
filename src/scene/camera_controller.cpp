@@ -34,25 +34,30 @@ void camera_controller::handle_mouse_button_event(const os::mouse_button_event& 
     if (event.get_mouse_button() != os::mouse_button_event::MOUSE_BUTTON_LEFT)
         return;
 
-    math::vec2 window_size = target.get_viewport_size();
-    math::vec2 mouse_pos = event.get_mouse_button_pos();
+    math::vec2 mouse_pos_relative = get_normalized_mouse_pos(event.get_mouse_button_pos());
     if (event.is_mouse_button_down()) {
-        anchor_pos = mouse_pos / window_size;
+        anchor_pos = mouse_pos_relative;
     } else {
-        orientation = spherical_angles_from_mouse_pos(mouse_pos / window_size);
+        orientation = spherical_angles_from_mouse_pos(mouse_pos_relative);
     }
 }
 
 void camera_controller::handle_mouse_move_event(const os::mouse_move_event& event)
 {
-    math::vec2 window_size = target.get_viewport_size();
-    math::vec2 mouse_pos = event.get_mouse_move_pos();
     if (event.get_mouse_move_button_state() & os::mouse_move_event::MOUSE_BUTTON_STATE_LEFT) {
         // Rotate view.
-        auto new_orientation = spherical_angles_from_mouse_pos(mouse_pos / window_size);
+        math::vec2 mouse_pos_relative = get_normalized_mouse_pos(event.get_mouse_move_pos());
+        auto new_orientation = spherical_angles_from_mouse_pos(mouse_pos_relative);
         auto camera_vector = radius * new_orientation.cartesian();
         target.set_position(target.get_look_at() - camera_vector);
     }
+}
+
+math::vec2 camera_controller::get_normalized_mouse_pos(const math::ivec2& mouse_pos)
+{
+    auto viewport_size = target.get_viewport_size();
+    return { math::real(mouse_pos.x) / math::real(viewport_size.width),
+             math::real(mouse_pos.y) / math::real(viewport_size.height) };
 }
 
 math::spherical_angles camera_controller::spherical_angles_from_mouse_pos(const mouse_pos_norm& pos)
