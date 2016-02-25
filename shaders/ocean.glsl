@@ -203,7 +203,7 @@ out vec3 color_out;
 uniform sampler2D d_height_tex; // partial derivatives of the heightfield
 uniform samplerCube sky_env;
 uniform vec3 rf0_water = vec3(0.02f, 0.02f, 0.02f); // Real-Time Rendering 3rd ed. pg. 236
-uniform vec3 diffuse_water = 0.5f * vec3(0.04f, 0.16f, 0.47f);
+uniform vec3 diffuse_water = 0.3f * vec3(0.04f, 0.16f, 0.47f);
 
 #define PI 3.14159265f
 #define DERIV_EPS 1e-1f
