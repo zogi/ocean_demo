@@ -19,7 +19,8 @@ void main_window::main_loop()
     util::graphics_timer timer;
 
     while (run_state == RUN_STATE_RUNNING) {
-        for (auto event : window.unprocessed_events()) {
+        os::event event;
+        while (window.poll_event(event)) {
             handle_event(event);
             camera_controller.handle_event(event);
         }
