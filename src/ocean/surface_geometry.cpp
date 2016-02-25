@@ -28,7 +28,7 @@ surface_geometry::surface_geometry(gpu::compute::command_queue queue, const surf
 }
 
 surface_geometry::shared_texture::shared_texture(gpu::compute::context& context, math::ivec2 size, texture_format format)
-  : tex(size.x, size.y, format)
+  : tex(util::extent(size.x, size.y), format)
 {
     tex.set_wrap_mode(rendering::texture_2d::WRAP_MODE_REPEAT);
     img = gpu::compute::graphics_image(context, CL_MEM_WRITE_ONLY, GL_TEXTURE_2D, 0, tex.get_api_texture());
