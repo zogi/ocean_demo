@@ -22,8 +22,6 @@ ocean_scene::ocean_scene(gpu::compute::command_queue queue, const ocean::surface
     main_camera.set_look_at(math::vec3(0, 1, 0));
     main_camera.set_position(math::vec3(0, 20, 30));
 
-    unit_quad.init();
-
     // Ocean
     ocean_surface.set_texture_max_anisotropy(rendering_params.texture_max_anisotropy);
     ocean_surface.bind_displacement_texture(ocean_displacement_tex_unit);

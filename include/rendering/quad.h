@@ -7,12 +7,11 @@ namespace rendering {
 
 class quad {
 public:
-    quad() : vao(0), vbo(0) {}
+    quad();
     ~quad();
     quad(const quad&) = delete;
     quad& operator=(const quad&) = delete;
 
-    void init();
     void draw();
     void draw_patch();
     void draw_instanced(size_t num_instances);

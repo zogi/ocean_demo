@@ -16,7 +16,7 @@ namespace {
     };
 }
 
-void quad::init()
+quad::quad()
 {
     // Vertex buffer
     glGenBuffers(1, &vbo);
