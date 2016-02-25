@@ -12,7 +12,7 @@ public:
     enum wrap_mode : GLenum { WRAP_MODE_CLAMP_TO_EDGE = GL_CLAMP_TO_EDGE, WRAP_MODE_REPEAT = GL_REPEAT };
     enum texture_format : GLenum { TEXTURE_FORMAT_RGBA8 = GL_RGBA8, TEXTURE_FORMAT_RG16F = GL_RG16F };
 
-    texture_2d(size_t width, size_t height, texture_format format);
+    texture_2d(size_t width, size_t height, texture_format format, const void *data = nullptr);
     ~texture_2d() { glDeleteTextures(1, &tex); }
     texture_2d(const texture_2d&) = delete;
     texture_2d(texture_2d&& texture) : tex(texture.tex) { texture.tex = 0; }
