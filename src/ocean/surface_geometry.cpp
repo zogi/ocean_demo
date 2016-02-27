@@ -31,6 +31,8 @@ surface_geometry::shared_texture::shared_texture(gpu::compute::context& context,
   : tex(util::extent(size.x, size.y), format)
 {
     tex.set_wrap_mode(rendering::texture_2d::WRAP_MODE_REPEAT);
+    tex.set_mag_filter(rendering::texture_2d::MAG_FILTER_LINEAR);
+    tex.set_min_filter(rendering::texture_2d::MIN_FILTER_MIPMAP);
     img = gpu::compute::graphics_image(context, CL_MEM_WRITE_ONLY, GL_TEXTURE_2D, 0, tex.get_api_texture());
     tex.generate_mipmap();
 }
