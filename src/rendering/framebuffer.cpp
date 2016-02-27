@@ -28,7 +28,7 @@ multisample_framebuffer::multisample_framebuffer(int width, int height, int num_
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rb);
     GL_CHECK();
 
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 
 multisample_framebuffer::~multisample_framebuffer()
