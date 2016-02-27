@@ -15,6 +15,7 @@ struct texture_format_traits {
 std::unordered_map<texture_2d::texture_format, texture_format_traits> format_traits = {
     { texture_2d::TEXTURE_FORMAT_RGBA8, {GL_RGBA8, GL_RGBA, GL_BYTE}},
     { texture_2d::TEXTURE_FORMAT_RG16F, {GL_RG16F, GL_RG, GL_HALF_FLOAT}},
+    { texture_2d::TEXTURE_FORMAT_R8I, {GL_R8I, GL_RED_INTEGER, GL_BYTE}}
 };
 
 } // unnamed namespace

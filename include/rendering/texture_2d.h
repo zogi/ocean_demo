@@ -11,7 +11,7 @@ public:
     enum mag_filter : GLenum { MAG_FILTER_NEAREST = GL_NEAREST, MAG_FILTER_LINEAR = GL_LINEAR };
     enum min_filter : GLenum { MIN_FILTER_NEAREST = GL_NEAREST, MIN_FILTER_LINEAR = GL_LINEAR, MIN_FILTER_MIPMAP = GL_LINEAR_MIPMAP_LINEAR };
     enum wrap_mode : GLenum { WRAP_MODE_CLAMP_TO_EDGE = GL_CLAMP_TO_EDGE, WRAP_MODE_REPEAT = GL_REPEAT };
-    enum texture_format : GLenum { TEXTURE_FORMAT_RGBA8 = GL_RGBA8, TEXTURE_FORMAT_RG16F = GL_RG16F };
+    enum texture_format : GLenum { TEXTURE_FORMAT_RGBA8 = GL_RGBA8, TEXTURE_FORMAT_RG16F = GL_RG16F, TEXTURE_FORMAT_R8I = GL_R8I};
 
     texture_2d(const util::extent& extent, texture_format format, const void *data = nullptr);
     ~texture_2d() { glDeleteTextures(1, &tex); }
