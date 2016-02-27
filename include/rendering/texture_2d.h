@@ -20,12 +20,12 @@ public:
     texture_2d& operator=(const texture_2d&) = delete;
     texture_2d& operator=(texture_2d&& texture) { tex = texture.tex; texture.tex = 0; return *this; }
 
-    void set_mag_filter(mag_filter mag_filter) { glTextureParameteri(tex, GL_TEXTURE_MAG_FILTER, mag_filter); }
-    void set_min_filter(min_filter min_filter) { glTextureParameteri(tex, GL_TEXTURE_MIN_FILTER, min_filter); }
+    void set_mag_filter(mag_filter mag_filter) { glTextureParameteri(tex, GL_TEXTURE_MAG_FILTER, mag_filter); GL_CHECK(); }
+    void set_min_filter(min_filter min_filter) { glTextureParameteri(tex, GL_TEXTURE_MIN_FILTER, min_filter); GL_CHECK(); }
     void set_wrap_mode(wrap_mode wrap_mode);
     void set_max_anisotropy(GLfloat max_anisotropy = 0.0);
-    void generate_mipmap() { glGenerateTextureMipmap(tex); }
-    void bind(gpu::graphics::texture_unit tex_unit) { glBindTextureUnit(tex_unit, tex); }
+    void generate_mipmap() { glGenerateTextureMipmap(tex); GL_CHECK(); }
+    void bind(gpu::graphics::texture_unit tex_unit) { glBindTextureUnit(tex_unit, tex); GL_CHECK(); }
     gpu::graphics::texture get_api_texture() const { return tex; }
 
 private:
@@ -36,6 +36,7 @@ inline void texture_2d::set_wrap_mode(wrap_mode wrap_mode)
 {
     glTextureParameteri(tex, GL_TEXTURE_WRAP_S, wrap_mode);
     glTextureParameteri(tex, GL_TEXTURE_WRAP_T, wrap_mode);
+    GL_CHECK();
 }
 
 inline void texture_2d::set_max_anisotropy(GLfloat max_anisotropy)
@@ -44,6 +45,8 @@ inline void texture_2d::set_max_anisotropy(GLfloat max_anisotropy)
         glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &max_anisotropy);
     }
     glTextureParameterf(tex, GL_TEXTURE_MAX_ANISOTROPY_EXT, max_anisotropy);
+    GL_CHECK();
+
 }
 
 } // namespace rendering

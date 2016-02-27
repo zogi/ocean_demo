@@ -25,6 +25,7 @@ texture_2d::texture_2d(const util::extent& extent, texture_format format, const 
     glBindTexture(GL_TEXTURE_2D, tex);
     auto traits = format_traits[format];
     glTexImage2D(GL_TEXTURE_2D, 0, format, GLsizei(extent.width), GLsizei(extent.height), 0, traits.format, traits.type, data);
+    GL_CHECK();
     set_mag_filter(MAG_FILTER_LINEAR);
     set_min_filter(MIN_FILTER_MIPMAP);
     set_wrap_mode(WRAP_MODE_CLAMP_TO_EDGE);
