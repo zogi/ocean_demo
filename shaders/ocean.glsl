@@ -239,7 +239,7 @@ void main()
 
     // Compute light color.
     vec3 eye = normalize(camera.model_transform.position - model_pos_gs);
-    vec3 reflected_eye = -reflect(eye, normal);
+    vec3 reflected_eye = reflect(-eye, normal);
     vec3 fres = fresnel_reflectance(rf0_water, normal, eye);
     vec3 sky = texture(sky_env, reflected_eye, 1.0f).xyz;
     vec3 sky_radiance = textureLod(sky_env, reflected_eye, textureQueryLevels(sky_env)).xyz;
