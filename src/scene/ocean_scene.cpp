@@ -56,6 +56,7 @@ void ocean_scene::render()
 
     timer.start();
 
+    glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     auto camera_orientation = math::transpose(math::mat3(main_camera.get_view_matrix()));
