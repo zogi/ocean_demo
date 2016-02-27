@@ -20,7 +20,7 @@ ocean_scene::ocean_scene(gpu::compute::command_queue queue, const ocean::surface
     ocean_surface(queue, surface_params)
 {
     main_camera.set_look_at(math::vec3(0, 1, 0));
-    main_camera.set_position(math::vec3(0, 20, 30));
+    main_camera.set_position(math::vec3(0, 14, 30));
 
     // Ocean
     ocean_surface.set_texture_max_anisotropy(rendering_params.texture_max_anisotropy);
