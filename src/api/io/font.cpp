@@ -29,7 +29,7 @@ public:
 } // namespace detail
 
 
-font::font(const char *filename, int ptsize) : black({0, 0, 0, 1})
+font::font(const char *filename, int ptsize)
 {
     static detail::ttf_api ttf_api;
 

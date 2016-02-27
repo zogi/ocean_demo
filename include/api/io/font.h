@@ -16,7 +16,6 @@ public:
     os::surface render_text(const char *text, const color& color);
 private:
     TTF_Font *api_font;
-    SDL_Color black;
 };
 
 } // namespace io
