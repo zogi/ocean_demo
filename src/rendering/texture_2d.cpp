@@ -26,7 +26,7 @@ texture_2d::texture_2d(const util::extent& extent, texture_format format, const 
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, tex);
     auto traits = format_traits[format];
-    glTexImage2D(GL_TEXTURE_2D, 0, format, GLsizei(extent.width), GLsizei(extent.height), 0, traits.format, traits.type, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, traits.internalformat, GLsizei(extent.width), GLsizei(extent.height), 0, traits.format, traits.type, data);
     GL_CHECK();
     glActiveTexture(GL_TEXTURE0);
 }
