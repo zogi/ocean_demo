@@ -14,6 +14,7 @@ public:
     surface(surface&& rhs) { api_surface = rhs.api_surface; rhs.api_surface = nullptr; }
     surface& operator=(const surface&) = delete;
     surface& operator=(surface&& rhs) { api_surface = rhs.api_surface; rhs.api_surface = nullptr; return *this; }
+    int get_pitch() const { return api_surface->pitch; };
     util::extent get_extent() const { return { api_surface->w, api_surface->h }; }
     void *get_pixels() const { return api_surface->pixels; }
 private:
