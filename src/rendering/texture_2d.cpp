@@ -22,10 +22,12 @@ std::unordered_map<texture_2d::texture_format, texture_format_traits> format_tra
 texture_2d::texture_2d(const util::extent& extent, texture_format format, const void *data)
 {
     glGenTextures(1, &tex);
+    glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, tex);
     auto traits = format_traits[format];
     glTexImage2D(GL_TEXTURE_2D, 0, format, GLsizei(extent.width), GLsizei(extent.height), 0, traits.format, traits.type, data);
     GL_CHECK();
+    glActiveTexture(GL_TEXTURE0);
 }
 
 } // namespace rendering
