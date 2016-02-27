@@ -240,6 +240,7 @@ void main()
     // Compute light color.
     vec3 eye = normalize(camera.model_transform.position - model_pos_gs);
     vec3 reflected_eye = reflect(-eye, normal);
+    reflected_eye.y = abs(reflected_eye.y); // Don't sample the sky from below water level.
     vec3 fres = fresnel_reflectance(rf0_water, normal, eye);
     vec3 sky = texture(sky_env, reflected_eye, 1.0f).xyz;
     vec3 sky_radiance = textureLod(sky_env, reflected_eye, textureQueryLevels(sky_env)).xyz;
