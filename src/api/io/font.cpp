@@ -44,7 +44,7 @@ font::~font()
 
 os::surface font::render_text(const char *text, const color& color)
 {
-    auto text_surface = TTF_RenderText_Solid(api_font, text, color);
+    auto text_surface = TTF_RenderText_Blended(api_font, text, color);
     TTF_CHECK(text_surface != 0);
     return text_surface;
 }
