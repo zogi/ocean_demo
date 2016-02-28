@@ -75,9 +75,10 @@ void main_window::render_performance_metrics(double multisample_resolve_millisec
     std::stringstream ss;
     ss.setf(std::ios::fixed);
     ss.precision(2);
-    ss << "FFT: TODO ms\n";
-    ss << "ocean surface: " << ocean_timing_data.ocean_drawcall_milliseconds << " ms\n";
-    ss << "rendering total: " << ocean_timing_data.render_milliseconds << " ms\n";
-    ss << "framebuffer resolve: " << multisample_resolve_milliseconds << " ms\n";
+    ss << "compute spectrum: " << ocean_timing_data.surface_geometry_timing_data.phase_shift_milliseconds << " ms\n";
+    ss << "compute FFT: " << ocean_timing_data.surface_geometry_timing_data.fft_milliseconds << " ms\n";
+    ss << "generate mipmaps: " << ocean_timing_data.surface_geometry_timing_data.mipmap_generation_milliseconds << " ms\n";
+    ss << "render ocean surface: " << ocean_timing_data.ocean_drawcall_milliseconds << " ms\n";
+    ss << "resolve framebuffer: " << multisample_resolve_milliseconds << " ms\n";
     text_renderer.render_text(ss.str(), util::offset(10, 10));
 }
