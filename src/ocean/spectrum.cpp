@@ -25,9 +25,9 @@ gpu::compute::event spectrum::enqueue_generate(gpu::compute::command_queue queue
     phase_shift_kernel.setArg(5, time);
     phase_shift_kernel.setArg(6, output_buffer);
 
-    auto offset = gpu::compute::nd_range(0, 0);
-    auto global_size = gpu::compute::nd_range(params.fft_size.x / 2 + 1, params.fft_size.y);
-    auto local_size = gpu::compute::nd_range(1, 1);
+    auto offset = gpu::compute::nd_range(0);
+    auto global_size = gpu::compute::nd_range((params.fft_size.x + 2) * params.fft_size.y);
+    auto local_size = gpu::compute::nd_range(64);
     gpu::compute::event event;
     queue.enqueueNDRangeKernel(phase_shift_kernel, offset, global_size, local_size, wait_events, &event);
 
