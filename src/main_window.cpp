@@ -28,10 +28,9 @@ void main_window::main_loop()
 
         framebuffer.activate();
         ocean_scene.render();
-
         {
-            auto resolve_timer = util::scoped_timer(timer, multisample_resolve_milliseconds);
-            framebuffer.resolve_to_backbuffer();
+        auto resolve_timer = util::scoped_timer(timer, multisample_resolve_milliseconds);
+        framebuffer.resolve_to_backbuffer();
         }
 
         // Render performance metrics.
