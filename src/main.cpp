@@ -1,8 +1,5 @@
 #include <main_window.h>
 #include <rendering/rendering_params.h>
-#include <scene/camera_controller.h>
-#include <scene/ocean_scene.h>
-#include <util/log.h>
 
 int main(int argc, char *argv[])
 {
