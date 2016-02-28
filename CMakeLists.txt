@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-project(clTessendorf)
+project(ocean_demo)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 find_package(OpenCL REQUIRED)
@@ -41,6 +41,6 @@ endforeach(DIRECTORY)
 
 include_directories(include)
 
-add_executable(cl_tessendorf ${HEADERS} ${SOURCES})
-target_link_libraries(cl_tessendorf ${OpenCL_LIBRARY} ${CLFFT_LIBRARIES}
+add_executable(ocean_demo ${HEADERS} ${SOURCES})
+target_link_libraries(ocean_demo ${OpenCL_LIBRARY} ${CLFFT_LIBRARIES}
     ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ${IL_LIBRARIES} ${ILU_LIBRARIES})
