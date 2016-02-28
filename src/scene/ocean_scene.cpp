@@ -53,6 +53,7 @@ void ocean_scene::render()
     float time = 0.001f * std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time).count();
 
     ocean_surface.enqueue_generate(time);
+    timings.surface_geometry_timing_data = ocean_surface.get_timing_data();
 
     timer.start();
 

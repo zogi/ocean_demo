@@ -71,7 +71,7 @@ command_queue init(os::window::graphics_context graphics_context)
         0 };
     auto c_context = context(c_device, context_properties, nullptr, nullptr);
 
-    return command_queue(c_context, c_device);
+    return command_queue(c_context, c_device, cl::QueueProperties::Profiling);
 }
 
 program create_program_from_file(context c_context, const char *file_name)

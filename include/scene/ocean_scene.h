@@ -26,6 +26,7 @@ public:
     struct timing_data {
         double render_milliseconds;
         double ocean_drawcall_milliseconds;
+        ocean::surface_geometry::timing_data surface_geometry_timing_data;
     };
     const timing_data& get_timing_data() const { return timings; }
 

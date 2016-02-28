@@ -39,14 +39,29 @@ surface_geometry::shared_texture::shared_texture(gpu::compute::context& context,
 
 void surface_geometry::enqueue_generate(math::real time, const gpu::compute::event_vector *wait_events)
 {
-    gpu::compute::event event;
-    event = wave_spectrum.enqueue_generate(queue, time, fft_buffer, wait_events);
-    event = fft_algorithm.enqueue_transform(queue, fft_buffer, &gpu::compute::event_vector({ event }));
-    event = enqueue_export_kernel(&gpu::compute::event_vector({ event }));
-    event.wait();
+    gpu::compute::event event_spectrum, event_fft, event_export;
+    event_spectrum = wave_spectrum.enqueue_generate(queue, time, fft_buffer, wait_events);
+    event_fft = fft_algorithm.enqueue_transform(queue, fft_buffer, &gpu::compute::event_vector({ event_spectrum }));
+    event_export = enqueue_export_kernel(&gpu::compute::event_vector({ event_fft }));
+    event_export.wait();
 
+    int64_t spectrum_start_ns = event_spectrum.getProfilingInfo<CL_PROFILING_COMMAND_START>();
+    int64_t spectrum_end_ns = event_spectrum.getProfilingInfo<CL_PROFILING_COMMAND_END>();
+    timings.phase_shift_milliseconds = (spectrum_end_ns - spectrum_start_ns) * 1e-6;
+
+    int64_t fft_start_ns = event_fft.getProfilingInfo<CL_PROFILING_COMMAND_START>();
+    int64_t fft_end_ns = event_fft.getProfilingInfo<CL_PROFILING_COMMAND_END>();
+    timings.fft_milliseconds = (fft_end_ns - fft_start_ns) * 1e-6;
+
+    int64_t export_start_ns = event_export.getProfilingInfo<CL_PROFILING_COMMAND_START>();
+    int64_t export_end_ns = event_export.getProfilingInfo<CL_PROFILING_COMMAND_END>();
+    timings.export_milliseconds = (export_end_ns - export_start_ns) * 1e-6;
+
+    {
+    auto mipmap_timer = util::scoped_timer(timer, timings.mipmap_generation_milliseconds);
     displacement_map.tex.generate_mipmap();
     height_gradient_map.tex.generate_mipmap();
+    }
 }
 
 gpu::compute::event surface_geometry::enqueue_export_kernel(const gpu::compute::event_vector *wait_events)
