@@ -1,5 +1,6 @@
 #include <main_window.h>
 
+#include <sstream>
 #include <util/timing.h>
 
 main_window::main_window(const rendering::rendering_params& rendering_params, const ocean::surface_params& ocean_params)
@@ -33,6 +34,9 @@ void main_window::main_loop()
             framebuffer.resolve_to_backbuffer();
         }
 
+        // Render performance metrics.
+        render_performance_metrics(multisample_resolve_milliseconds);
+
         window.swap_frame();
     }
 }
@@ -64,4 +68,17 @@ void main_window::handle_keyboard_event(const os::keyboard_event& event)
     const char KEY_ESCAPE = '\033';
     if (event.get_keysym() == KEY_ESCAPE)
         handle_quit_event();
+}
+
+void main_window::render_performance_metrics(double multisample_resolve_milliseconds)
+{
+    auto ocean_timing_data = ocean_scene.get_timing_data();
+    std::stringstream ss;
+    ss.setf(std::ios::fixed);
+    ss.precision(2);
+    ss << "FFT: TODO ms\n";
+    ss << "ocean surface: " << ocean_timing_data.ocean_drawcall_milliseconds << " ms\n";
+    ss << "rendering total: " << ocean_timing_data.render_milliseconds << " ms\n";
+    ss << "framebuffer resolve: " << multisample_resolve_milliseconds << " ms\n";
+    text_renderer.render_text(ss.str(), util::offset(10, 10));
 }
