@@ -20,6 +20,13 @@ The textures directory has to contain a file named sky.png
 One possible sky box which looks good can be found here (as of 20-Feb-2016):
 http://mi.eng.cam.ac.uk/~agk34/resources/textures/sky/sky.png
 
+The camera can be rotated by pressing the left mouse button and dragging.
+
+## Settings
+
+The settings, such as FFT size, projected grid size, MSAA sample count and
+max texture anisotropy, are compiled in, an can be modified by editing src/main.cpp.
+
 ## Dependencies
 
 In order to build and run the demo, the following open-source libraries are needed:
