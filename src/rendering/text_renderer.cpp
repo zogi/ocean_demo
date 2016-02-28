@@ -7,7 +7,7 @@
 
 namespace rendering {
 
-text_renderer::text_renderer() : font("OpenSans-Regular.ttf", 26), color({0xff, 0xff, 0xff, 0xff})
+text_renderer::text_renderer() : font("OpenSans-Regular.ttf", 26), color({0, 0, 0, 0xff})
 {
     text_shader.load_shaders("shaders/text.glsl", shader_type::VERTEX | shader_type::FRAGMENT);
     text_shader.set_z_test_state(false);
