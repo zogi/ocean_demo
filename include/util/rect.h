@@ -19,9 +19,9 @@ struct extent
 
 struct rect
 {
-    rect(const offset& offset, const extent& extent) : offset(offset), extent(extent) {}
-    offset offset;
-    extent extent;
+    rect(const offset& rect_offset, const extent& rect_extent) : rect_offset(rect_offset), rect_extent(rect_extent) {}
+    offset rect_offset;
+    extent rect_extent;
 };
 
 } // namespace util
