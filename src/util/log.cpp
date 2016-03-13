@@ -18,7 +18,7 @@ namespace {
 
 namespace util {
 
-void log(const char * file, int line, const char * format, ...)
+void log(const char *file, int line, const char *format, ...)
 {
     va_list(args);
 
