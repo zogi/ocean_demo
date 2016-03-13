@@ -5,6 +5,17 @@
 #define __STDC_WANT_LIB_EXT1__ 1  // needed for localtime_s
 #include <ctime>
 
+#ifndef __STDC_LIB_EXT1__
+#include <cstring>
+namespace {
+    struct tm *localtime_s(const time_t *time, struct tm *result)
+    {
+        struct tm *tm_data = localtime(time);
+        memcpy(result, tm_data, sizeof(tm_data));
+    }
+} // undefined namespace
+#endif
+
 namespace util {
 
 void log(const char * file, int line, const char * format, ...)
