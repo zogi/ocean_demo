@@ -30,7 +30,7 @@ private:
     void render_performance_metrics(double multisample_resolve_milliseconds);
 
     os::window window;
-    gpu::compute::command_queue& queue;
+    gpu::compute::command_queue queue;
     rendering::multisample_framebuffer framebuffer;
     rendering::text_renderer text_renderer;
     scene::ocean_scene ocean_scene;
