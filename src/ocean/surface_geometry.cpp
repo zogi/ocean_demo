@@ -41,8 +41,10 @@ void surface_geometry::enqueue_generate(math::real time, const gpu::compute::eve
 {
     gpu::compute::event event_spectrum, event_fft, event_export;
     event_spectrum = wave_spectrum.enqueue_generate(queue, time, fft_buffer, wait_events);
-    event_fft = fft_algorithm.enqueue_transform(queue, fft_buffer, &gpu::compute::event_vector({ event_spectrum }));
-    event_export = enqueue_export_kernel(&gpu::compute::event_vector({ event_fft }));
+    auto event_vector_spectrum = gpu::compute::event_vector({ event_spectrum });
+    event_fft = fft_algorithm.enqueue_transform(queue, fft_buffer, &event_vector_spectrum);
+    auto event_vector_export = gpu::compute::event_vector({ event_fft });
+    event_export = enqueue_export_kernel(&event_vector_export);
     event_export.wait();
 
     int64_t spectrum_start_ns = event_spectrum.getProfilingInfo<CL_PROFILING_COMMAND_START>();
@@ -73,8 +75,10 @@ gpu::compute::event surface_geometry::enqueue_export_kernel(const gpu::compute::
     gpu::compute::nd_range offset = { 0, 0 }, local_size = { 1, 1 };
     auto size = wave_spectrum.get_params().fft_size;
     gpu::compute::nd_range global_size = { cl::size_type(size.x), cl::size_type(size.y) };
-    queue.enqueueNDRangeKernel(export_kernel, offset, global_size, local_size, &gpu::compute::event_vector({ event }), &event);
-    queue.enqueueReleaseGLObjects(&gl_objects, &gpu::compute::event_vector({ event }), &event);
+    auto event_vector_acquire = gpu::compute::event_vector({ event });
+    queue.enqueueNDRangeKernel(export_kernel, offset, global_size, local_size, &event_vector_acquire, &event);
+    auto event_vector_kernel = gpu::compute::event_vector({ event });
+    queue.enqueueReleaseGLObjects(&gl_objects, &event_vector_kernel, &event);
     return event;
 }
 
