@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include <GL/GLU.h>
+#include <GL/glu.h>
 
 #include <util/error.h>
 #include <util/log.h>
