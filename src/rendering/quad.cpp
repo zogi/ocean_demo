@@ -21,7 +21,7 @@ quad::quad()
     // Vertex buffer
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof quad_vertices, quad_vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), quad_vertices, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     // Vertex array object
@@ -29,7 +29,7 @@ quad::quad()
     glBindVertexArray(vao);
 
     // Vertex attributes
-    glBindVertexBuffer(0, vbo, 0, sizeof vertex);
+    glBindVertexBuffer(0, vbo, 0, sizeof(vertex));
     // - position
     glVertexAttribBinding(0, 0);
     glVertexAttribFormat(0, 3, GL_FLOAT, GL_FALSE, 0);
