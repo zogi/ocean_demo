@@ -94,7 +94,7 @@ program create_program_from_file(context c_context, const char *file_name)
     return res;
 }
 
-const char *compute::get_error_string(cl_int status)
+const char *get_error_string(cl_int status)
 {
     switch (status) {
     // run-time and JIT compiler errors
