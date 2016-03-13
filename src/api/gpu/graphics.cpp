@@ -2,7 +2,6 @@
 
 #include <cstdio>
 #include <cstring>
-#include <unordered_map>
 
 #include <GL/GLU.h>
 
