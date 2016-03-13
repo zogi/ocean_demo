@@ -44,3 +44,4 @@ include_directories(include)
 add_executable(ocean_demo ${HEADERS} ${SOURCES})
 target_link_libraries(ocean_demo ${OpenCL_LIBRARY} ${CLFFT_LIBRARIES}
     ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ${IL_LIBRARIES} ${ILU_LIBRARIES})
+target_compile_features(ocean_demo PRIVATE cxx_range_for cxx_auto_type)
