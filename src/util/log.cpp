@@ -16,7 +16,7 @@ void log(const char * file, int line, const char * format, ...)
     // HH:MM:SS
     auto now_t = std::chrono::system_clock::to_time_t(now);
     struct tm now_cal;
-    localtime_s(&now_cal, &now_t);
+    localtime_s(&now_t, &now_cal);
     static char timestr[20];
     strftime(timestr, sizeof timestr, "%H:%M:%S", &now_cal);
 
