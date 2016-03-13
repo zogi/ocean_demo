@@ -11,7 +11,7 @@ namespace {
     struct tm *localtime_s(const time_t *time, struct tm *result)
     {
         struct tm *tm_data = localtime(time);
-        memcpy(result, tm_data, sizeof(tm_data));
+        memcpy(result, tm_data, sizeof(struct tm));
     }
 } // undefined namespace
 #endif
