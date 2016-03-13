@@ -27,7 +27,7 @@ surface_geometry::surface_geometry(gpu::compute::command_queue queue, const surf
     export_kernel.setArg(4, height_gradient_map.img);
 }
 
-surface_geometry::shared_texture::shared_texture(gpu::compute::context& context, math::ivec2 size, texture_format format)
+surface_geometry::shared_texture::shared_texture(gpu::compute::context context, math::ivec2 size, texture_format format)
   : tex(util::extent(size.x, size.y), format)
 {
     tex.set_wrap_mode(rendering::texture_2d::WRAP_MODE_REPEAT);

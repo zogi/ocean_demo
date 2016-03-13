@@ -36,7 +36,7 @@ private:
     typedef rendering::texture_2d::texture_format texture_format;
 
     struct shared_texture {
-        shared_texture(gpu::compute::context& context, math::ivec2 size, texture_format format);
+        shared_texture(gpu::compute::context context, math::ivec2 size, texture_format format);
         gpu::compute::graphics_image img;
         rendering::texture_2d tex;
     };
