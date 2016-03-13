@@ -47,7 +47,7 @@ private:
 
 template<typename T>
 inline void shader_effect::set_parameter(const char *param_name, const T& value) const
-{ static_assert(false, "not implemented"); }
+{ static_assert(sizeof(T)==-1, "not implemented"); }
 
 template<> inline void shader_effect::set_parameter<GLint>(const char *param_name, const GLint& value) const
 {
