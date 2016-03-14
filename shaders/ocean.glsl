@@ -25,8 +25,8 @@ vec3 get_displacement(vec2 p, vec2 dp_dx, vec2 dp_dy)
 
 // Displacement mapping is only used up to a certain distance. Beyond that a noise-perturbed normal is used.
 // There is smooth transition between the two. The two thresholds of the transition range are define below.
-#define NOISE_THRESHOLD_DISTANCE_MIN 1000.0f
-#define NOISE_THRESHOLD_DISTANCE_MAX 10000.0f
+#define DISPLACEMENT_MAPPING_DISTANCE_MIN 1000.0f
+#define DISPLACEMENT_MAPPING_DISTANCE_MAX 10000.0f
 
 // Camera data
 struct camera_internal {
@@ -141,7 +141,7 @@ void main()
 
     // Fade out displacement at the distance.
     float distance_to_camera = length(camera.model_transform.position - model_pos);
-    displacement_vs *= 1 - smoothstep(NOISE_THRESHOLD_DISTANCE_MIN, NOISE_THRESHOLD_DISTANCE_MAX, distance_to_camera);
+    displacement_vs *= 1 - smoothstep(DISPLACEMENT_MAPPING_DISTANCE_MIN, DISPLACEMENT_MAPPING_DISTANCE_MAX, distance_to_camera);
 
     model_pos += displacement_vs;
     model_pos_vs = model_pos;
@@ -233,7 +233,7 @@ void main()
 
     // Fade out normal displacement with distance.
     float distance_to_camera = length(camera.model_transform.position - model_pos_gs);
-    float mix_factor = smoothstep(NOISE_THRESHOLD_DISTANCE_MIN, NOISE_THRESHOLD_DISTANCE_MAX, distance_to_camera);
+    float mix_factor = smoothstep(DISPLACEMENT_MAPPING_DISTANCE_MIN, DISPLACEMENT_MAPPING_DISTANCE_MAX, distance_to_camera);
     vec3 normal = mix(normalize(cross(dx, -dz)), vec3(0, 1, 0), mix_factor);
     normal = normalize(normal);
 
