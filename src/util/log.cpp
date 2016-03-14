@@ -12,6 +12,7 @@ namespace {
     {
         struct tm *tm_data = localtime(time);
         memcpy(result, tm_data, sizeof(struct tm));
+        return tm_data;
     }
 } // undefined namespace
 #endif
