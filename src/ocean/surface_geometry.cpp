@@ -5,7 +5,7 @@
 
 namespace ocean {
 
-#define N_FFT_BATCHES 5
+#define N_FFT_BATCHES 9
 
 surface_geometry::surface_geometry(gpu::compute::command_queue queue, const surface_params& params)
   : queue(queue),
@@ -13,7 +13,7 @@ surface_geometry::surface_geometry(gpu::compute::command_queue queue, const surf
     fft_algorithm(queue, params.fft_size, N_FFT_BATCHES),
     fft_buffer(queue.getInfo<CL_QUEUE_CONTEXT>(), CL_MEM_READ_ONLY, N_FFT_BATCHES * (params.fft_size.x + 2) * params.fft_size.y * sizeof(float)),
     displacement_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.fft_size, texture_format::TEXTURE_FORMAT_RGBA8),
-    height_gradient_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.fft_size, texture_format::TEXTURE_FORMAT_RG16F)
+    height_gradient_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.fft_size, texture_format::TEXTURE_FORMAT_RGBA8)
 {
     // Load export kernel.
     auto program = gpu::compute::create_program_from_file(queue.getInfo<CL_QUEUE_CONTEXT>(), "kernels/export_to_texture.cl");

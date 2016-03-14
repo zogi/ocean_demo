@@ -200,7 +200,7 @@ smooth in vec2 uv_gs, duv_dx_gs, duv_dy_gs;
 
 out vec3 color_out;
 
-uniform sampler2D d_height_tex; // partial derivatives of the heightfield
+uniform sampler2D normal_tex;
 uniform samplerCube sky_env;
 uniform vec3 rf0_water = vec3(0.02f, 0.02f, 0.02f); // Real-Time Rendering 3rd ed. pg. 236
 uniform vec3 diffuse_water = vec3(0.04f, 0.16f, 0.47f);
@@ -218,23 +218,12 @@ vec3 fresnel_reflectance(vec3 rf0, vec3 normal, vec3 incident)
 
 void main()
 {
-    // Get height slopes.
-    vec2 d_height = textureGrad(d_height_tex, uv_gs, duv_dx_gs, duv_dy_gs).xy;
-
-    // Approximate the derivative of the xz displacement vector field using first-order finite differences.
-    vec2 hdisp_00 = displacement_gs.xz;
-    vec2 hdisp_10 = get_displacement(uv_gs + vec2(DERIV_EPS, 0.0f), duv_dx_gs, duv_dy_gs).xz;
-    vec2 hdisp_01 = get_displacement(uv_gs + vec2(0.0f, DERIV_EPS), duv_dx_gs, duv_dy_gs).xz;
-    vec2 du_hdisp = (hdisp_10 - hdisp_00) / (DERIV_EPS * tile_size_logical.xz);
-    vec2 dv_hdisp = (hdisp_01 - hdisp_00) / (DERIV_EPS * tile_size_logical.xz);
-
-    vec3 dx = vec3(1.0f, 0.0f, 0.0f) + vec3(du_hdisp.x, d_height.x, du_hdisp.y);
-    vec3 dz = vec3(0.0f, 0.0f, 1.0f) + vec3(dv_hdisp.x, d_height.y, dv_hdisp.y);
+    vec3 normal = 2 * textureGrad(normal_tex, uv_gs, duv_dx_gs, duv_dy_gs).xyz - 1;
 
     // Fade out normal displacement with distance.
     float distance_to_camera = length(camera.model_transform.position - model_pos_gs);
     float mix_factor = smoothstep(DISPLACEMENT_MAPPING_DISTANCE_MIN, DISPLACEMENT_MAPPING_DISTANCE_MAX, distance_to_camera);
-    vec3 normal = mix(normalize(cross(dx, -dz)), vec3(0, 1, 0), mix_factor);
+    normal = mix(normal, vec3(0, 1, 0), mix_factor);
     normal = normalize(normal);
 
     // Compute light color.

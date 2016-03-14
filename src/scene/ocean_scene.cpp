@@ -32,7 +32,7 @@ ocean_scene::ocean_scene(gpu::compute::command_queue queue, const ocean::surface
     ocean_effect.set_parameter("units_per_meter", surface_params.tile_size_logical / surface_params.tile_size_physical);
     ocean_effect.set_parameter("tile_size_logical", surface_params.tile_size_logical);
     ocean_effect.set_parameter("displacement_tex", ocean_displacement_tex_unit);
-    ocean_effect.set_parameter("d_height_tex", ocean_height_deriv_tex_unit);
+    ocean_effect.set_parameter("normal_tex", ocean_height_deriv_tex_unit);
     ocean_effect.set_parameter("sky_env", sky_cubemap_tex_unit);
 
     // Sky
