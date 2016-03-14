@@ -25,8 +25,8 @@ vec3 get_displacement(vec2 p, vec2 dp_dx, vec2 dp_dy)
 
 // Displacement mapping is only used up to a certain distance. Beyond that a noise-perturbed normal is used.
 // There is smooth transition between the two. The two thresholds of the transition range are define below.
-#define DISPLACEMENT_MAPPING_DISTANCE_MIN 1000.0f
-#define DISPLACEMENT_MAPPING_DISTANCE_MAX 10000.0f
+#define DISPLACEMENT_MAPPING_DISTANCE_MIN 800.0f
+#define DISPLACEMENT_MAPPING_DISTANCE_MAX 900.0f
 
 // Camera data
 struct camera_internal {
