@@ -19,11 +19,11 @@ real dispersion_relation(real k)
 kernel void phase_shift(global const real *in, real Lx, real Lz, int N, int M, real t, global real *out)
 {
     const int global_idx = get_global_id(0);
+    const int local_idx = global_idx % LOCAL_SIZE;
     const int size_x = N / 2 + 1;
     const int i = global_idx & 1;              // 0..1 (real/imag)
     const int x_i = (global_idx / 2) % size_x; // 0..N/2
     const int z_i = global_idx / (2 * size_x); // 0..M-1
-    const int local_idx = global_idx % LOCAL_SIZE;
 
     const real k_x = two_pi * x_i / Lx;
     const int z = (z_i + M / 2) % M - M / 2;
