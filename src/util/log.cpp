@@ -1,8 +1,10 @@
+#define __STDC_WANT_SECURE_LIB__ 0 // disable VS version of localtime_s
+#define _CRT_SECURE_NO_WARNINGS  1 // suppress VS warning about using localtime
+#define __STDC_WANT_LIB_EXT1__   1 // needed for standard localtime_s
 #include <util/log.h>
 #include <chrono>
 #include <cstdio>
 #include <cstdarg>
-#define __STDC_WANT_LIB_EXT1__ 1  // needed for localtime_s
 #include <ctime>
 
 #ifndef __STDC_LIB_EXT1__
