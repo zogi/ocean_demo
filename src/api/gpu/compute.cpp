@@ -33,6 +33,17 @@ namespace {
             return std::find(supported.begin(), supported.end(), extension) != supported.end(); });
     }
 
+    std::string dump_extensions(const gpu::compute::extension_vector& extensions)
+    {
+        std::stringstream ss;
+        for (int i = 0; i < extensions.size(); ++i) {
+            if (i != 0)
+                ss << ", ";
+            ss << extensions[i];
+        }
+        return ss.str();
+    }
+
     compute::device get_device(cl_device_type device_type, const extension_vector& required_extensions)
     {
         vector<compute::platform> platforms;
@@ -47,8 +58,13 @@ namespace {
                 extension_vector device_extensions = platform_extensions;
                 append_extensions(device.getInfo<CL_DEVICE_EXTENSIONS>(), device_extensions);
 
-                if (check_extension_requirements(required_extensions, device_extensions))
+                if (check_extension_requirements(required_extensions, device_extensions)) {
                     return device;
+                } else {
+                    LOG("Found GPU device '%s', but some required extensions are not supported.\n", device.getInfo<CL_DEVICE_NAME>().c_str());
+                    LOG("  required extensions are: %s\n", dump_extensions(required_extensions).c_str());
+                    LOG("  device extensions are: %s\n", dump_extensions(device_extensions).c_str());
+                }
             }
         }
 
