@@ -17,11 +17,11 @@ public:
     window(const window&) = delete;
     window& operator=(const window&) = delete;
 
-    void swap_frame();
     inline util::extent get_extent() const;
-    window::graphics_context get_graphics_context() const { return gl_context; }
+    graphics_context get_graphics_context() const { return gl_context; }
 
     bool poll_event(os::event& event) { return SDL_PollEvent(&event.get_api_event()) != 0; }
+    void swap_frame();
 
 private:
     SDL_Window *window_handle;
