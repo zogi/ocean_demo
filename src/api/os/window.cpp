@@ -3,6 +3,9 @@
 #include <util/error.h>
 #include <api/gpu/graphics.h>
 
+#define NOMINMAX
+#include <SDL_syswm.h>
+
 namespace os {
 
 namespace detail {
@@ -91,24 +94,6 @@ namespace {
         }
     }
 
-    // Hack to extract winsys display handle
-    union subsys_info {
-        struct {
-            intptr_t unused;
-            intptr_t display;
-        } win;
-
-        struct {
-            intptr_t display;
-            // ...
-        } x11;
-
-        struct {
-            intptr_t display;
-            // ...
-        } wayland;
-    };
-
 } // unnamed namespace
 
 window::display_handle window::get_display_handle() const
@@ -116,22 +101,16 @@ window::display_handle window::get_display_handle() const
     SDL_SysWMinfo wm_info;
     SDL_VERSION(&wm_info.version);
     SDL_GetWindowWMInfo(window_handle, &wm_info);
-    subsys_info *subsys_info = reinterpret_cast<union subsys_info*>(&wm_info.info);
 
-    switch (wm_info.subsystem) {
-    case SDL_SYSWM_WINDOWS:
-        return subsys_info->win.display;
-        break;
-    case SDL_SYSWM_X11:
-        return subsys_info->x11.display;
-        break;
-    case SDL_SYSWM_WAYLAND:
-        return subsys_info->wayland.display;
-        break;
-    default:
-        DIE("Unsupported windowing system: %s\n", wm_name(wm_info.subsystem));
-    }
-    return window::display_handle();
+#ifdef SDL_VIDEO_DRIVER_WINDOWS
+    assert(wm_info.subsystem == SDL_SYSWM_WINDOWS);
+    return reinterpret_cast<window::display_handle>(wm_info.info.win.hdc);
+#elif defined SDL_VIDEO_DRIVER_X11
+    assert(wm_info.subsystem == SDL_SYSWM_X11);
+    return reinterpret_cast<window::display_handle>(wm_info.info.x11.display);
+#endif
+
+    DIE("Unsupported windowing system: %s\n", wm_name(wm_info.subsystem));
 }
 
 window::wm_type window::get_wm_type() const
@@ -139,7 +118,17 @@ window::wm_type window::get_wm_type() const
     SDL_SysWMinfo wm_info;
     SDL_VERSION(&wm_info.version);
     SDL_GetWindowWMInfo(window_handle, &wm_info);
-    return wm_info.subsystem;
+
+    switch (wm_info.subsystem) {
+    case SDL_SYSWM_WINDOWS:
+        return WM_TYPE_WINDOWS;
+    case SDL_SYSWM_X11:
+        return WM_TYPE_X11;
+    default:
+        DIE("Unsupported windowing system: %s\n", wm_name(wm_info.subsystem));
+    }
+
+    return WM_TYPE_UNKNOWN;
 }
 
 } // namespace os

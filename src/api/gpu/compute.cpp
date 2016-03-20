@@ -89,14 +89,11 @@ command_queue init(const os::window& window)
 
     cl_context_properties display_property;
     switch (window.get_wm_type()) {
-    case SDL_SYSWM_WINDOWS:
+    case os::window::WM_TYPE_WINDOWS:
         display_property = CL_WGL_HDC_KHR;
         break;
-    case SDL_SYSWM_X11:
+    case os::window::WM_TYPE_X11:
         display_property = CL_GLX_DISPLAY_KHR;
-        break;
-    case SDL_SYSWM_WAYLAND:
-        display_property = CL_EGL_DISPLAY_KHR;
         break;
     default:
         DIE("Unsupported windowing system\n.");

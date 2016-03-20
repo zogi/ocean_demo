@@ -2,7 +2,6 @@
 #define __WINDOW_H_GUARD
 
 #include <SDL.h>
-#include <SDL_syswm.h>
 #include <SDL_video.h>
 
 #include <api/os/event.h>
@@ -14,7 +13,7 @@ class window {
 public:
     typedef SDL_GLContext graphics_context;
     typedef intptr_t display_handle;
-    typedef SDL_SYSWM_TYPE wm_type;
+    enum wm_type { WM_TYPE_UNKNOWN = 0, WM_TYPE_WINDOWS = 1, WM_TYPE_X11 = 2 };
 
     window(const char *title, const util::extent& window_size, Uint32 sdl_window_flags = 0);
     ~window();
