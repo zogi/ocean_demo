@@ -63,4 +63,83 @@ window::~window()
     SDL_DestroyWindow(window_handle);
 }
 
+namespace {
+    const char *wm_name(SDL_SYSWM_TYPE type)
+    {
+        switch (type) {
+        case SDL_SYSWM_WINDOWS:
+            return "Microsoft Windows";
+        case SDL_SYSWM_X11:
+            return "X Window System";
+        case SDL_SYSWM_DIRECTFB:
+            return "DirectFB";
+        case SDL_SYSWM_COCOA:
+            return "Apple Mac OS X";
+        case SDL_SYSWM_UIKIT:
+            return "Apple iOS";
+        case SDL_SYSWM_WAYLAND:
+            return "Wayland";
+        case SDL_SYSWM_MIR:
+            return "Mir";
+        case SDL_SYSWM_WINRT:
+            return "WinRT";
+        case SDL_SYSWM_ANDROID:
+            return "Android";
+        case SDL_SYSWM_UNKNOWN:
+        default:
+            return "unknown";
+        }
+    }
+
+    // Hack to extract winsys display handle
+    union subsys_info {
+        struct {
+            intptr_t unused;
+            intptr_t display;
+        } win;
+
+        struct {
+            intptr_t display;
+            // ...
+        } x11;
+
+        struct {
+            intptr_t display;
+            // ...
+        } wayland;
+    };
+
+} // unnamed namespace
+
+window::display_handle window::get_display_handle() const
+{
+    SDL_SysWMinfo wm_info;
+    SDL_VERSION(&wm_info.version);
+    SDL_GetWindowWMInfo(window_handle, &wm_info);
+    subsys_info *subsys_info = reinterpret_cast<union subsys_info*>(&wm_info.info);
+
+    switch (wm_info.subsystem) {
+    case SDL_SYSWM_WINDOWS:
+        return subsys_info->win.display;
+        break;
+    case SDL_SYSWM_X11:
+        return subsys_info->x11.display;
+        break;
+    case SDL_SYSWM_WAYLAND:
+        return subsys_info->wayland.display;
+        break;
+    default:
+        DIE("Unsupported windowing system: %s\n", wm_name(wm_info.subsystem));
+    }
+    return window::display_handle();
+}
+
+window::wm_type window::get_wm_type() const
+{
+    SDL_SysWMinfo wm_info;
+    SDL_VERSION(&wm_info.version);
+    SDL_GetWindowWMInfo(window_handle, &wm_info);
+    return wm_info.subsystem;
+}
+
 } // namespace os

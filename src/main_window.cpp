@@ -5,7 +5,7 @@
 
 main_window::main_window(const rendering::rendering_params& rendering_params, const ocean::surface_params& ocean_params)
   : window("ocean demo", util::extent(1024, 768), SDL_WINDOW_MAXIMIZED),
-    queue(gpu::compute::init(window.get_graphics_context())),
+    queue(gpu::compute::init(window)),
     framebuffer(window.get_extent().width, window.get_extent().height, rendering_params.multisampling_sample_count),
     ocean_scene(queue, ocean_params, rendering_params),
     camera_controller(ocean_scene.get_main_camera()),

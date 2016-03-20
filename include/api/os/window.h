@@ -2,7 +2,9 @@
 #define __WINDOW_H_GUARD
 
 #include <SDL.h>
+#include <SDL_syswm.h>
 #include <SDL_video.h>
+
 #include <api/os/event.h>
 #include <util/rect.h>
 
@@ -11,6 +13,8 @@ namespace os {
 class window {
 public:
     typedef SDL_GLContext graphics_context;
+    typedef intptr_t display_handle;
+    typedef SDL_SYSWM_TYPE wm_type;
 
     window(const char *title, const util::extent& window_size, Uint32 sdl_window_flags = 0);
     ~window();
@@ -19,6 +23,8 @@ public:
 
     inline util::extent get_extent() const;
     graphics_context get_graphics_context() const { return gl_context; }
+    display_handle get_display_handle() const;
+    wm_type get_wm_type() const;
 
     bool poll_event(os::event& event) { return SDL_PollEvent(&event.get_api_event()) != 0; }
     void swap_frame();

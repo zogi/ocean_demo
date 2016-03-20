@@ -28,7 +28,7 @@ namespace compute {
     typedef std::vector<event> event_vector;
     typedef cl::NDRange        nd_range;
 
-    command_queue init(os::window::graphics_context graphics_context);
+    command_queue init(const os::window& window);
     program create_program_from_file(gpu::compute::context context, const char *file_name);
     const char *get_error_string(cl_int status);
 

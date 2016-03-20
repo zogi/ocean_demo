@@ -78,16 +78,34 @@ namespace {
 
 } // unnamed namespace
 
-command_queue init(os::window::graphics_context graphics_context)
+command_queue init(const os::window& window)
 {
     extension_set required_extensions = { "cl_khr_gl_sharing" };
 
     auto c_device = get_device(CL_DEVICE_TYPE_GPU, required_extensions);
     auto c_platform_id = c_device.getInfo<CL_DEVICE_PLATFORM>();
 
+    cl_context_properties display_handle = window.get_display_handle();
+
+    cl_context_properties display_property;
+    switch (window.get_wm_type()) {
+    case SDL_SYSWM_WINDOWS:
+        display_property = CL_WGL_HDC_KHR;
+        break;
+    case SDL_SYSWM_X11:
+        display_property = CL_GLX_DISPLAY_KHR;
+        break;
+    case SDL_SYSWM_WAYLAND:
+        display_property = CL_EGL_DISPLAY_KHR;
+        break;
+    default:
+        DIE("Unsupported windowing system\n.");
+    }
+
     cl_context_properties context_properties[] = {
         CL_CONTEXT_PLATFORM, reinterpret_cast<cl_context_properties>(c_platform_id),
-        CL_GL_CONTEXT_KHR, reinterpret_cast<cl_context_properties>(graphics_context),
+        CL_GL_CONTEXT_KHR, reinterpret_cast<cl_context_properties>(window.get_graphics_context()),
+        display_property, display_handle,
         0 };
     auto c_context = context(c_device, context_properties, nullptr, nullptr);
 
