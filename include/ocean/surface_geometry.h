@@ -43,6 +43,7 @@ private:
 
     gpu::compute::event enqueue_export_kernel(const gpu::compute::event_vector *wait_events = nullptr);
 
+    bool is_gl_event_supported;
     gpu::compute::command_queue queue;
     spectrum wave_spectrum;
     gpu::fft::ifft2d_hermitian_inplace fft_algorithm;

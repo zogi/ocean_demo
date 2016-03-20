@@ -12,58 +12,62 @@
 namespace gpu {
 namespace compute {
 
+extension_set::extension_set(const std::string& extensions)
+{
+    add_extensions(extensions);
+}
+
+extension_set::extension_set(device compute_device)
+{
+    auto compute_platform = platform(compute_device.getInfo<CL_DEVICE_PLATFORM>(), false);
+    add_extensions(compute_platform.getInfo<CL_PLATFORM_EXTENSIONS>());
+    add_extensions(compute_device.getInfo<CL_DEVICE_EXTENSIONS>());
+}
+
+void extension_set::add_extensions(const std::string& extensions)
+{
+    typedef std::istream_iterator<extension> iter;
+    auto ss = std::stringstream(extensions);
+    std::copy(iter(ss), iter(), std::inserter(*this, this->begin()));
+}
+
+bool extension_set::is_subset_of(const extension_set& superset) const
+{
+    return std::includes(superset.begin(), superset.end(), begin(), end());
+}
+
+std::string extension_set::to_string() const
+{
+    std::stringstream ss;
+    int i = 0;
+    for (auto extension : *this) {
+        if (i++ != 0)
+            ss << ", ";
+        ss << extension;
+    }
+    return ss.str();
+}
+
 namespace {
-    using std::string;
-    using std::stringstream;
-    using std::vector;
-
-    typedef string extension;
-    typedef vector<extension> extension_vector;
-
-    void append_extensions(const extension& in, extension_vector& out)
+    compute::device get_device(cl_device_type device_type, const extension_set& required_extensions)
     {
-        typedef std::istream_iterator<extension> iter;
-        auto ss = stringstream(in);
-        std::copy(iter(ss), iter(), std::back_inserter(out));
-    }
-
-    bool check_extension_requirements(const extension_vector& required, const extension_vector& supported)
-    {
-        return std::all_of(required.begin(), required.end(), [&supported](const extension& extension) {
-            return std::find(supported.begin(), supported.end(), extension) != supported.end(); });
-    }
-
-    std::string dump_extensions(const gpu::compute::extension_vector& extensions)
-    {
-        std::stringstream ss;
-        for (int i = 0; i < extensions.size(); ++i) {
-            if (i != 0)
-                ss << ", ";
-            ss << extensions[i];
-        }
-        return ss.str();
-    }
-
-    compute::device get_device(cl_device_type device_type, const extension_vector& required_extensions)
-    {
-        vector<compute::platform> platforms;
+        std::vector<compute::platform> platforms;
         compute::platform::get(&platforms);
         for (auto& platform : platforms) {
-            extension_vector platform_extensions;
-            append_extensions(platform.getInfo<CL_PLATFORM_EXTENSIONS>(), platform_extensions);
+            extension_set platform_extensions(platform.getInfo<CL_PLATFORM_EXTENSIONS>());
 
             std::vector<compute::device> devices;
             platform.getDevices(device_type, &devices);
             for (const auto& device : devices) {
-                extension_vector device_extensions = platform_extensions;
-                append_extensions(device.getInfo<CL_DEVICE_EXTENSIONS>(), device_extensions);
+                extension_set device_extensions = platform_extensions;
+                device_extensions.add_extensions(device.getInfo<CL_DEVICE_EXTENSIONS>());
 
-                if (check_extension_requirements(required_extensions, device_extensions)) {
+                if (required_extensions.is_subset_of(device_extensions)) {
                     return device;
                 } else {
                     LOG("Found GPU device '%s', but some required extensions are not supported.\n", device.getInfo<CL_DEVICE_NAME>().c_str());
-                    LOG("  required extensions are: %s\n", dump_extensions(required_extensions).c_str());
-                    LOG("  device extensions are: %s\n", dump_extensions(device_extensions).c_str());
+                    LOG("  required extensions are: %s\n", required_extensions.to_string().c_str());
+                    LOG("  device extensions are: %s\n", device_extensions.to_string().c_str());
                 }
             }
         }
@@ -76,7 +80,7 @@ namespace {
 
 command_queue init(os::window::graphics_context graphics_context)
 {
-    extension_vector required_extensions = { "cl_khr_gl_sharing", "cl_khr_gl_event" };
+    extension_set required_extensions = { "cl_khr_gl_sharing" };
 
     auto c_device = get_device(CL_DEVICE_TYPE_GPU, required_extensions);
     auto c_platform_id = c_device.getInfo<CL_DEVICE_PLATFORM>();

@@ -15,6 +15,11 @@ surface_geometry::surface_geometry(gpu::compute::command_queue queue, const surf
     displacement_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.fft_size, texture_format::TEXTURE_FORMAT_RGBA8),
     height_gradient_map(queue.getInfo<CL_QUEUE_CONTEXT>(), params.fft_size, texture_format::TEXTURE_FORMAT_RGBA8)
 {
+    // Check if device supports cl_khr_gl_event extension.
+    auto device = queue.getInfo<CL_QUEUE_DEVICE>();
+    auto extensions = gpu::compute::extension_set(device);
+    is_gl_event_supported = extensions.has_extension("cl_khr_gl_event");
+
     // Load export kernel.
     auto program = gpu::compute::create_program_from_file(queue.getInfo<CL_QUEUE_CONTEXT>(), "kernels/export_to_texture.cl");
     export_kernel = gpu::compute::kernel(program, "export_to_texture");
@@ -71,6 +76,7 @@ gpu::compute::event surface_geometry::enqueue_export_kernel(const gpu::compute::
     gpu::compute::event event;
     std::vector<gpu::compute::memory_object> gl_objects = { displacement_map.img, height_gradient_map.img };
 
+    if (!is_gl_event_supported) glFinish();
     queue.enqueueAcquireGLObjects(&gl_objects, wait_events, &event);
     gpu::compute::nd_range offset = { 0, 0 }, local_size = { 1, 1 };
     auto size = wave_spectrum.get_params().fft_size;
@@ -79,6 +85,7 @@ gpu::compute::event surface_geometry::enqueue_export_kernel(const gpu::compute::
     queue.enqueueNDRangeKernel(export_kernel, offset, global_size, local_size, &event_vector_acquire, &event);
     auto event_vector_kernel = gpu::compute::event_vector({ event });
     queue.enqueueReleaseGLObjects(&gl_objects, &event_vector_kernel, &event);
+    if (!is_gl_event_supported) queue.finish();
     return event;
 }
 
