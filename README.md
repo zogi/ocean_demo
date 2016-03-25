@@ -34,7 +34,7 @@ In order to build and run the demo, the following open-source libraries are need
    * clFFT
    * DevIL
    * GLM (build only)
-   * OpenCL >= 2.0 (with cl\_khr\_event and cl\_khr\_gl\_sharing extensions)
+   * OpenCL >= 1.2 (with cl\_khr\_gl\_sharing extension)
    * OpenGL >= 4.0 (with GL\_EXT\_texture\_filter\_anisotropic extension)
    * SDL2
    * SDL2\_ttf
