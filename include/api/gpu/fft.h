@@ -1,8 +1,8 @@
 #ifndef __FFT_H_GUARD
 #define __FFT_H_GUARD
 
-#include <clFFT.h>
 #include <api/gpu/compute.h>
+#include <clFFT.h>
 #include <api/math.h>
 
 namespace gpu {
