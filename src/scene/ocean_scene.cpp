@@ -36,7 +36,11 @@ ocean_scene::ocean_scene(gpu::compute::command_queue queue, const ocean::surface
     ocean_effect.set_parameter("sky_env", sky_cubemap_tex_unit);
 
     // Sky
-    sky_env.load_from_file("textures/sky.png");
+    try {
+        sky_env.load_from_file("textures/sky.png");
+    } catch (rendering::cubemap::load_error) {
+        sky_env.load_from_file("textures/sky-default.png");
+    }
     sky_env.bind(sky_cubemap_tex_unit);
 
     sky_effect.load_shaders("shaders/sky.glsl", VERTEX | FRAGMENT);

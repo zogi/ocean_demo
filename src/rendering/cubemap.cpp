@@ -4,7 +4,6 @@
 #include <vector>
 
 #include <util/error.h>
-#include <api/io/image.h>
 
 namespace rendering {
 

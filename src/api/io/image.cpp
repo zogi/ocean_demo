@@ -34,6 +34,9 @@ image::image(const char *filename)
     ilGenImages(1, &image_handle);
     ilBindImage(image_handle);
     ilLoadImage(filename);
+    if (ilGetError() == IL_COULD_NOT_OPEN_FILE)    {
+        throw load_error();
+    }
     IL_CHECK();
 }
 
