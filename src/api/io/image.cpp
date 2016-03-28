@@ -18,7 +18,10 @@ inline void il_check(const char * file, int line)
 }
 
 struct image_api {
-    image_api() { ilInit(); }
+    image_api() {
+        ilInit();
+        iluInit();
+    }
 };
 
 } // unnamed namespace
