@@ -1,0 +1,4 @@
+The sky.png file included in the repo can be downloaded from:
+http://mi.eng.cam.ac.uk/~agk34/resources/textures/sky/sky.png
+License:
+http://mi.eng.cam.ac.uk/~agk34/resources/textures/LICENSE
