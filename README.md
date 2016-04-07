@@ -45,6 +45,10 @@ In order to build and run the demo, the following open-source libraries are need
    * SDL2
    * SDL2\_ttf
 
+## Binary release
+
+A binary release for Win64 is available via [http://zogi.github.io/downloads/ocean\_demo-win64.zip](http://zogi.github.io/downloads/ocean_demo-win64.zip).
+
 ---
 
 \[1\] Tessendorf, J., 2001. Simulating ocean water. Simulating Nature: Realistic and Interactive Techniques. SIGGRAPH, 1(2), p.5.
