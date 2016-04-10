@@ -45,6 +45,8 @@ In order to build and run the demo, the following open-source libraries are need
    * SDL2
    * SDL2\_ttf
 
+Currently only Windows and Linux are supported.
+
 ## Binary release
 
 A binary release for Win64 is available via [http://zogi.github.io/downloads/ocean\_demo-win64.zip](http://zogi.github.io/downloads/ocean_demo-win64.zip).
