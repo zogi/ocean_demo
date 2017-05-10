@@ -10,7 +10,7 @@ The projected grid points are then modified by the FFT-generated displacement
 map.
 This demo uses clFFT, so FFT computation runs on the GPU.
 
-##Screenshot
+## Screenshot
 
 <a href="http://zogi.github.io/images/screenshot_ocean_demo.png">
 <img src="http://zogi.github.io/images/screenshot_ocean_demo_small.png" alt="Screenshot of the ocean demo"/>
