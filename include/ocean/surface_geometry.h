@@ -32,6 +32,9 @@ public:
     };
     timing_data get_timing_data() const { return timings; }
 
+    float get_wave_amplitude() const { return wave_spectrum.get_params().amplitude; }
+    void set_wave_amplitude(float a) { wave_spectrum.set_amplitude(a); }
+
 private:
     typedef rendering::texture_2d::texture_format texture_format;
 

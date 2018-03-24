@@ -23,7 +23,8 @@ gpu::compute::event spectrum::enqueue_generate(gpu::compute::command_queue queue
                                                const gpu::compute::event_vector *wait_events)
 {
     phase_shift_kernel.setArg(5, time);
-    phase_shift_kernel.setArg(6, output_buffer);
+    phase_shift_kernel.setArg(6, params.amplitude);
+    phase_shift_kernel.setArg(7, output_buffer);
 
     auto offset = gpu::compute::nd_range(0);
     auto global_size = gpu::compute::nd_range((params.fft_size.x + 2) * params.fft_size.y);
@@ -83,7 +84,7 @@ real spectrum::phillips_spectrum(int i, int j)
     real k_sqr = k * k;
     real damp_large = exp(-real(1) / (k_sqr * L * L));
     real damp_small = exp(-k_sqr * params.wavelength_low_threshold * params.wavelength_low_threshold);
-    return params.amplitude_factor * damp_large * damp_small * w_cos * w_cos / (k_sqr * k_sqr);
+    return damp_large * damp_small * w_cos * w_cos / (k_sqr * k_sqr);
 }
 
 } // namespace ocean

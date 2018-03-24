@@ -52,6 +52,12 @@ ocean_scene::ocean_scene(gpu::compute::command_queue queue, const ocean::surface
 
 void ocean_scene::render()
 {
+    ImGui::Begin("ocean params");
+    float amplitude = ocean_surface.get_wave_amplitude();
+    ImGui::SliderFloat("amplitude", &amplitude, 0, 10);
+    ocean_surface.set_wave_amplitude(amplitude);
+    ImGui::End();
+
     static auto start_time = std::chrono::steady_clock::now();
     auto current_time = std::chrono::steady_clock::now();
     float time = 0.001f * std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time).count();

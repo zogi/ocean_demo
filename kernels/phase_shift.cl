@@ -16,7 +16,7 @@ real dispersion_relation(real k)
 
 #define LOCAL_SIZE 64
 
-kernel void phase_shift(global const real *in, real Lx, real Lz, int N, int M, real t, global real *out)
+kernel void phase_shift(global const real *in, real Lx, real Lz, int N, int M, real t, real A, global real *out)
 {
     const int global_idx = get_global_id(0);
     const int local_idx = global_idx % LOCAL_SIZE;
@@ -53,7 +53,7 @@ kernel void phase_shift(global const real *in, real Lx, real Lz, int N, int M, r
 
     // Fourier transform of the height (y displacement) at t=0.
     local real h_tilde[LOCAL_SIZE];
-    h_tilde[local_idx] = in[global_idx];
+    h_tilde[local_idx] = A * in[global_idx];
 
     const real isign = i ? 1 : -1;
 

@@ -18,6 +18,7 @@ public:
                                          math::real time, gpu::compute::memory_object output_buffer,
                                          const gpu::compute::event_vector *wait_events = nullptr);
     const surface_params& get_params() const { return params; }
+    void set_amplitude(float amplitude) { params.amplitude = amplitude; }
 
 private:
     void set_initial_spectrum(gpu::compute::context context);
