@@ -42,6 +42,7 @@ void log(const char *file, int line, const char *format, ...)
     va_start(args, format);
     vprintf(format, args);
     va_end(args);
+    fflush(stdout);
 }
 
 } // namespace util
