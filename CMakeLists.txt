@@ -50,3 +50,19 @@ add_executable(ocean_demo ${HEADERS} ${SOURCES})
 target_link_libraries(ocean_demo imgui ${CLFFT_LIBRARIES} ${OpenCL_LIBRARY}
     ${SDL2_TTF_LIBRARY} ${SDL2_LIBRARY} ${ILU_LIBRARIES} ${IL_LIBRARIES} ${OPENGL_glu_LIBRARY} ${OPENGL_gl_LIBRARY} ${CMAKE_DL_LIBS})
 target_compile_features(ocean_demo PRIVATE cxx_range_for cxx_auto_type)
+
+# Cube map -> stereographic projection tool.
+add_executable(cube2sgproj
+    tools/cube2sgproj/main.cpp
+    tools/cube2sgproj/sgproj.glsl
+    src/util/log.cpp
+    src/util/util.cpp
+    src/api/gpu/graphics.cpp
+    src/api/os/window.cpp
+    src/api/os/imgui_impl_sdl_gl3.cpp
+    src/api/io/image.cpp
+    src/rendering/cubemap.cpp
+    src/rendering/quad.cpp
+    src/rendering/shader_effect.cpp
+    ${GL3W_HEADERS} ${GL3W_SOURCES})
+target_link_libraries(cube2sgproj imgui ${SDL2_LIBRARY} ${ILU_LIBRARIES} ${IL_LIBRARIES} ${OPENGL_glu_LIBRARY} ${OPENGL_gl_LIBRARY} ${CMAKE_DL_LIBS})
