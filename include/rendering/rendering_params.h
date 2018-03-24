@@ -8,7 +8,7 @@ namespace rendering {
 struct rendering_params {
     int multisampling_sample_count;
     float texture_max_anisotropy;
-    math::vec2 projected_grid_size_factor; // relative to window size
+    math::vec2 tile_size_pixels;
 };
 
 } // namespace rendering
