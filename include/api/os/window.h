@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <SDL_video.h>
+#include <imgui.h>
 
 #include <api/os/event.h>
 #include <util/rect.h>
@@ -25,18 +26,14 @@ public:
     display_handle get_display_handle() const;
     wm_type get_wm_type() const;
 
-    bool poll_event(os::event& event) { return SDL_PollEvent(&event.get_api_event()) != 0; }
-    void swap_frame();
+    bool poll_event(os::event& event);
+    void begin_frame();
+    void end_frame();
 
 private:
     SDL_Window *window_handle;
     SDL_GLContext gl_context;
 };
-
-inline void window::swap_frame()
-{
-    SDL_GL_SwapWindow(window_handle);
-}
 
 inline util::extent window::get_extent() const
 {

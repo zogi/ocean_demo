@@ -1,5 +1,7 @@
 #include <api/os/window.h>
 
+#include "imgui_impl_sdl_gl3.h"
+
 #include <util/error.h>
 #include <api/gpu/graphics.h>
 
@@ -57,11 +59,19 @@ window::window(const char *title, const util::extent& window_size, Uint32 sdl_wi
 
     gpu::graphics::init();
 
+    // Setup ImGui binding
+    ImGui::CreateContext();
+    ImGui_ImplSdlGL3_Init(window_handle);
+    ImGui::StyleColorsDark();
+
     SDL_GL_SetSwapInterval(1);
 }
 
 window::~window()
 {
+    ImGui_ImplSdlGL3_Shutdown();
+    ImGui::DestroyContext();
+
     SDL_GL_DeleteContext(gl_context);
     SDL_DestroyWindow(window_handle);
 }
@@ -129,6 +139,49 @@ window::wm_type window::get_wm_type() const
     }
 
     return WM_TYPE_UNKNOWN;
+}
+
+bool window::poll_event(os::event& event)
+{
+    SDL_Event* sdl_event = &event.get_api_event();
+    while (SDL_PollEvent(sdl_event) != 0) {
+
+        ImGui_ImplSdlGL3_ProcessEvent(sdl_event);
+
+        // Check if it should be passed to the caller.
+        const ImGuiIO& io = ImGui::GetIO();
+
+        const bool is_keyboard_event =
+            sdl_event->type == SDL_KEYDOWN ||
+            sdl_event->type == SDL_KEYUP ||
+            sdl_event->type == SDL_TEXTINPUT;
+        if (io.WantCaptureKeyboard && is_keyboard_event)
+            continue;
+
+        const bool is_mouse_event =
+            sdl_event->type == SDL_MOUSEMOTION ||
+            sdl_event->type == SDL_MOUSEBUTTONDOWN ||
+            sdl_event->type == SDL_MOUSEBUTTONUP ||
+            sdl_event->type == SDL_MOUSEWHEEL;
+        if (io.WantCaptureMouse && is_mouse_event)
+            continue;
+
+        // The event can be passed to the caller.
+        return true;
+    }
+    return false;
+}
+
+void window::begin_frame()
+{
+    ImGui_ImplSdlGL3_NewFrame(window_handle);
+}
+
+void window::end_frame()
+{
+    ImGui::Render();
+    ImGui_ImplSdlGL3_RenderDrawData(ImGui::GetDrawData());
+    SDL_GL_SwapWindow(window_handle);
 }
 
 } // namespace os

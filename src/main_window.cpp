@@ -26,6 +26,8 @@ void main_window::main_loop()
             camera_controller.handle_event(event);
         }
 
+        window.begin_frame();
+
         framebuffer.activate();
         ocean_scene.render();
         {
@@ -36,7 +38,7 @@ void main_window::main_loop()
         // Render performance metrics.
         render_performance_metrics(multisample_resolve_milliseconds);
 
-        window.swap_frame();
+        window.end_frame();
     }
 }
 
