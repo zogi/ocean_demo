@@ -1,23 +1,25 @@
 #ifndef __SPECTRUM_H_GUARD
 #define __SPECTRUM_H_GUARD
 
-#include <vector>
 #include <api/gpu/compute.h>
 #include <api/math.h>
 #include <ocean/surface_params.h>
+#include <vector>
 
 namespace ocean {
 
 class spectrum {
 public:
-    spectrum(gpu::compute::context context, const surface_params& params);
-    spectrum(const spectrum&) = delete;
-    spectrum& operator=(const spectrum&) = delete;
+    spectrum(gpu::compute::context context, const surface_params &params);
+    spectrum(const spectrum &) = delete;
+    spectrum &operator=(const spectrum &) = delete;
 
-    gpu::compute::event enqueue_generate(gpu::compute::command_queue queue,
-                                         math::real time, gpu::compute::memory_object output_buffer,
-                                         const gpu::compute::event_vector *wait_events = nullptr);
-    const surface_params& get_params() const { return params; }
+    gpu::compute::event enqueue_generate(
+        gpu::compute::command_queue queue,
+        math::real time,
+        gpu::compute::memory_object output_buffer,
+        const gpu::compute::event_vector *wait_events = nullptr);
+    const surface_params &get_params() const { return params; }
     void set_amplitude(float amplitude) { params.amplitude = amplitude; }
 
 private:

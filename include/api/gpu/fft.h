@@ -2,8 +2,8 @@
 #define __FFT_H_GUARD
 
 #include <api/gpu/compute.h>
-#include <clFFT.h>
 #include <api/math.h>
+#include <clFFT.h>
 
 namespace gpu {
 namespace fft {
@@ -14,12 +14,15 @@ typedef clfftPlanHandle plan_handle;
 
 class ifft2d_hermitian_inplace {
 public:
-    ifft2d_hermitian_inplace(gpu::compute::command_queue queue, const math::ivec2& size, size_t num_batches);
+    ifft2d_hermitian_inplace(gpu::compute::command_queue queue, const math::ivec2 &size, size_t num_batches);
     ~ifft2d_hermitian_inplace();
-    ifft2d_hermitian_inplace(const ifft2d_hermitian_inplace&) = delete;
-    ifft2d_hermitian_inplace& operator=(const ifft2d_hermitian_inplace&) = delete;
+    ifft2d_hermitian_inplace(const ifft2d_hermitian_inplace &) = delete;
+    ifft2d_hermitian_inplace &operator=(const ifft2d_hermitian_inplace &) = delete;
 
-    gpu::compute::event enqueue_transform(gpu::compute::command_queue queue, gpu::compute::memory_object buffer, gpu::compute::event_vector *wait_events = nullptr);
+    gpu::compute::event enqueue_transform(
+        gpu::compute::command_queue queue,
+        gpu::compute::memory_object buffer,
+        gpu::compute::event_vector *wait_events = nullptr);
 
 private:
     api::plan_handle fft_plan;

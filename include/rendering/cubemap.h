@@ -10,8 +10,8 @@ class cubemap {
 public:
     cubemap() : cubemap_texture(0) {}
     ~cubemap();
-    cubemap(const cubemap&) = delete;
-    cubemap& operator=(const cubemap&) = delete;
+    cubemap(const cubemap &) = delete;
+    cubemap &operator=(const cubemap &) = delete;
 
     void load_from_file(const char *image_file);
     void bind(gpu::graphics::texture_unit unit);

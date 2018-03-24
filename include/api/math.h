@@ -24,22 +24,30 @@ typedef glm::tmat2x2<real> mat2;
 typedef glm::tmat3x3<real> mat3;
 typedef glm::tmat4x4<real> mat4;
 
-using glm::tan;
-using glm::length;
-using glm::normalize;
-using glm::dot;
 using glm::cross;
-using glm::transpose;
+using glm::dot;
+using glm::length;
 using glm::lookAt;
+using glm::normalize;
 using glm::perspective;
+using glm::tan;
+using glm::transpose;
 using glm::value_ptr;
 
 class spherical_angles {
 public:
     spherical_angles() {}
-    spherical_angles(real azimuthal, real polar) { set_azimuthal(azimuthal); set_polar(polar); }
-    spherical_angles(const vec2& angles) { set_azimuthal(angles.x); set_polar(angles.y); }
-    spherical_angles(const vec3& cartesian)
+    spherical_angles(real azimuthal, real polar)
+    {
+        set_azimuthal(azimuthal);
+        set_polar(polar);
+    }
+    spherical_angles(const vec2 &angles)
+    {
+        set_azimuthal(angles.x);
+        set_polar(angles.y);
+    }
+    spherical_angles(const vec3 &cartesian)
     {
         real radius = math::length(cartesian);
         set_polar(glm::acos(cartesian.y / radius));

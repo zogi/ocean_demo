@@ -19,7 +19,10 @@ typedef GLuint renderbuffer;
 typedef GLuint texture_unit;
 
 void init();
-inline void set_viewport_size(int width, int height) { glViewport(0, 0, GLsizei(width), GLsizei(height)); }
+inline void set_viewport_size(int width, int height)
+{
+    glViewport(0, 0, GLsizei(width), GLsizei(height));
+}
 
 #define GL_CHECK() ::gpu::graphics::check_last_error(__FILE__, __LINE__)
 void check_last_error(const char *file, int line);

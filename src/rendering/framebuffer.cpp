@@ -48,10 +48,7 @@ void multisample_framebuffer::resize(int new_width, int new_height)
     std::swap(depth_rb, new_fb.depth_rb);
 }
 
-void multisample_framebuffer::activate()
-{
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-}
+void multisample_framebuffer::activate() { glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo); }
 
 void multisample_framebuffer::resolve_to_backbuffer()
 {

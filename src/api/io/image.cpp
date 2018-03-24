@@ -9,7 +9,7 @@ namespace io {
 namespace detail {
 
 #define IL_CHECK() detail::il_check(__FILE__, __LINE__)
-inline void il_check(const char * file, int line)
+inline void il_check(const char *file, int line)
 {
     auto il_error = ilGetError();
     if (il_error != IL_NO_ERROR) {
@@ -18,14 +18,14 @@ inline void il_check(const char * file, int line)
 }
 
 struct image_api {
-    image_api() {
+    image_api()
+    {
         ilInit();
         iluInit();
     }
 };
 
-} // unnamed namespace
-
+} // namespace detail
 
 image::image(const char *filename)
 {
@@ -34,16 +34,13 @@ image::image(const char *filename)
     ilGenImages(1, &image_handle);
     ilBindImage(image_handle);
     ilLoadImage(filename);
-    if (ilGetError() == IL_COULD_NOT_OPEN_FILE)    {
+    if (ilGetError() == IL_COULD_NOT_OPEN_FILE) {
         throw load_error();
     }
     IL_CHECK();
 }
 
-image::~image()
-{
-    ilDeleteImages(1, &image_handle);
-}
+image::~image() { ilDeleteImages(1, &image_handle); }
 
 void image::copy_pixels(int x_offset, int y_offset, int width, int height, void *destination) const
 {

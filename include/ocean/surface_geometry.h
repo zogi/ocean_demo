@@ -4,8 +4,8 @@
 #include <api/gpu/compute.h>
 #include <api/gpu/fft.h>
 #include <api/math.h>
-#include <ocean/surface_params.h>
 #include <ocean/spectrum.h>
+#include <ocean/surface_params.h>
 #include <rendering/texture_2d.h>
 #include <util/timing.h>
 
@@ -13,15 +13,20 @@ namespace ocean {
 
 class surface_geometry {
 public:
-
-    surface_geometry(gpu::compute::command_queue queue, const surface_params& params);
-    surface_geometry(const surface_geometry&) = delete;
-    surface_geometry& operator=(const surface_geometry&) = delete;
+    surface_geometry(gpu::compute::command_queue queue, const surface_params &params);
+    surface_geometry(const surface_geometry &) = delete;
+    surface_geometry &operator=(const surface_geometry &) = delete;
 
     // Generates displacement map and height gradient map to textures.
     void enqueue_generate(math::real time, const gpu::compute::event_vector *wait_events = nullptr);
-    void bind_displacement_texture(gpu::graphics::texture_unit tex_unit) { displacement_map.tex.bind(tex_unit); }
-    void bind_height_gradient_texture(gpu::graphics::texture_unit tex_unit) { height_gradient_map.tex.bind(tex_unit); }
+    void bind_displacement_texture(gpu::graphics::texture_unit tex_unit)
+    {
+        displacement_map.tex.bind(tex_unit);
+    }
+    void bind_height_gradient_texture(gpu::graphics::texture_unit tex_unit)
+    {
+        height_gradient_map.tex.bind(tex_unit);
+    }
     inline void set_texture_max_anisotropy(float max_anisotropy);
 
     struct timing_data {

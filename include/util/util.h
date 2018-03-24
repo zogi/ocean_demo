@@ -5,7 +5,7 @@
 
 namespace util {
 
-std::string read_file_contents(const std::string& filename);
+std::string read_file_contents(const std::string &filename);
 
 } // namespace util
 

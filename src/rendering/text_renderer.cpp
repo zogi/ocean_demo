@@ -1,20 +1,20 @@
 #include <rendering/text_renderer.h>
 
 #include <algorithm>
+#include <rendering/texture_2d.h>
 #include <sstream>
 #include <vector>
-#include <rendering/texture_2d.h>
 
 namespace rendering {
 
-text_renderer::text_renderer() : font("OpenSans-Regular.ttf", 26), color({0, 0, 0, 0xff})
+text_renderer::text_renderer() : font("OpenSans-Regular.ttf", 26), color({ 0, 0, 0, 0xff })
 {
     text_shader.load_shaders("shaders/text.glsl", shader_type::VERTEX | shader_type::FRAGMENT);
     text_shader.set_z_test_state(false);
     text_shader.set_z_write_state(false);
 }
 
-void text_renderer::render_text(const std::string& text, const util::offset& offset)
+void text_renderer::render_text(const std::string &text, const util::offset &offset)
 {
     constexpr gpu::graphics::texture_unit text_texture_unit = 4;
 
@@ -36,16 +36,18 @@ void text_renderer::render_text(const std::string& text, const util::offset& off
     }
 
     // Blit line surfaces to a single text surface.
-    os::surface text_surface = os::surface::create_32bit_rgba(util::extent(text_width, nlines * font.get_lineskip()));
+    os::surface text_surface =
+        os::surface::create_32bit_rgba(util::extent(text_width, nlines * font.get_lineskip()));
     util::offset line_offset(0, 0);
-    for (auto& line_surface : line_surfaces) {
+    for (auto &line_surface : line_surfaces) {
         line_surface.blit_to(text_surface, line_offset);
         line_offset.y += font.get_lineskip();
     }
 
     // Create texture from text_surface.
     auto texture_extent = util::extent(text_surface.get_pitch() / 4, text_surface.get_extent().height);
-    auto text_texture = texture_2d(texture_extent, texture_2d::TEXTURE_FORMAT_RGBA8, text_surface.get_pixels());
+    auto text_texture =
+        texture_2d(texture_extent, texture_2d::TEXTURE_FORMAT_RGBA8, text_surface.get_pixels());
     text_texture.set_mag_filter(texture_2d::MAG_FILTER_LINEAR);
     text_texture.set_min_filter(texture_2d::MIN_FILTER_LINEAR);
     text_texture.set_wrap_mode(texture_2d::WRAP_MODE_CLAMP_TO_EDGE);

@@ -1,11 +1,11 @@
-#include <util/util.h>
 #include <fstream>
 #include <sstream>
 #include <util/error.h>
+#include <util/util.h>
 
 namespace util {
 
-std::string read_file_contents(const std::string& filename)
+std::string read_file_contents(const std::string &filename)
 {
     std::ifstream file(filename);
 

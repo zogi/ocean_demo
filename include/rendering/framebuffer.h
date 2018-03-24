@@ -9,8 +9,8 @@ class multisample_framebuffer {
 public:
     multisample_framebuffer(int width, int height, int num_samples);
     ~multisample_framebuffer();
-    multisample_framebuffer(const multisample_framebuffer&) = delete;
-    multisample_framebuffer& operator=(const multisample_framebuffer&) = delete;
+    multisample_framebuffer(const multisample_framebuffer &) = delete;
+    multisample_framebuffer &operator=(const multisample_framebuffer &) = delete;
 
     void resize(int new_width, int new_height);
     // Draw calls render to this framebuffer after calling activate.
@@ -25,6 +25,6 @@ private:
     gpu::graphics::renderbuffer color_rb, depth_rb;
 };
 
-} // namespace renderenig
+} // namespace rendering
 
 #endif // !__FRAMEBUFFER_H_GUARD

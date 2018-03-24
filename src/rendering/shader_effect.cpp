@@ -4,8 +4,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include <util/log.h>
 #include <util/error.h>
+#include <util/log.h>
 #include <util/util.h>
 
 #include <api/gpu/graphics.h>
@@ -14,43 +14,40 @@ namespace rendering {
 
 namespace {
 
-static const GLenum gl_shader_types[] = {
-    GL_VERTEX_SHADER,
-    GL_TESS_CONTROL_SHADER,
-    GL_TESS_EVALUATION_SHADER,
-    GL_GEOMETRY_SHADER,
-    GL_FRAGMENT_SHADER };
+static const GLenum gl_shader_types[] = { GL_VERTEX_SHADER, GL_TESS_CONTROL_SHADER,
+                                          GL_TESS_EVALUATION_SHADER, GL_GEOMETRY_SHADER,
+                                          GL_FRAGMENT_SHADER };
 
-static const std::unordered_map<GLenum, const char *> gl_shader_type_defines = {
-    { GL_VERTEX_SHADER,          "#define VERTEX_SHADER\n" },
-    { GL_TESS_CONTROL_SHADER,    "#define TESSELLATION_CONTROL_SHADER\n" },
-    { GL_TESS_EVALUATION_SHADER, "#define TESSELLATION_EVALUATION_SHADER\n" },
-    { GL_GEOMETRY_SHADER,        "#define GEOMETRY_SHADER\n" },
-    { GL_FRAGMENT_SHADER,        "#define FRAGMENT_SHADER\n" } };
+static const std::unordered_map<GLenum, const char *> gl_shader_type_defines =
+    { { GL_VERTEX_SHADER, "#define VERTEX_SHADER\n" },
+      { GL_TESS_CONTROL_SHADER, "#define TESSELLATION_CONTROL_SHADER\n" },
+      { GL_TESS_EVALUATION_SHADER, "#define TESSELLATION_EVALUATION_SHADER\n" },
+      { GL_GEOMETRY_SHADER, "#define GEOMETRY_SHADER\n" },
+      { GL_FRAGMENT_SHADER, "#define FRAGMENT_SHADER\n" } };
 
-const char* get_shader_type_define(GLenum shader_type) {
+const char *get_shader_type_define(GLenum shader_type)
+{
     return gl_shader_type_defines.at(shader_type);
 }
 
-static const std::unordered_map<GLenum, const char *> gl_shader_type_names = {
-    { GL_VERTEX_SHADER,          "vertex shader" },
-    { GL_TESS_CONTROL_SHADER,    "tessellation control shader" },
-    { GL_TESS_EVALUATION_SHADER, "tessellation evaluation shader" },
-    { GL_GEOMETRY_SHADER,        "geometry shader" },
-    { GL_FRAGMENT_SHADER,        "fragment shader" } };
+static const std::unordered_map<GLenum, const char *> gl_shader_type_names =
+    { { GL_VERTEX_SHADER, "vertex shader" },
+      { GL_TESS_CONTROL_SHADER, "tessellation control shader" },
+      { GL_TESS_EVALUATION_SHADER, "tessellation evaluation shader" },
+      { GL_GEOMETRY_SHADER, "geometry shader" },
+      { GL_FRAGMENT_SHADER, "fragment shader" } };
 
-const char* get_shader_type_name(GLenum shader_type) {
+const char *get_shader_type_name(GLenum shader_type)
+{
     return gl_shader_type_names.at(shader_type);
 }
 
 } // unnamed namespace
 
-shader_effect::~shader_effect()
-{
-    glDeleteProgram(program_id);
-}
+shader_effect::~shader_effect() { glDeleteProgram(program_id); }
 
-void shader_effect::load_shaders(const char *filename, shader_type_set pipeline_stages) {
+void shader_effect::load_shaders(const char *filename, shader_type_set pipeline_stages)
+{
     // Load specified shaders from file and compile them.
     constexpr int num_shader_stages = 5;
     std::vector<GLuint> shaders;
@@ -99,7 +96,7 @@ void shader_effect::use() const
     GL_CHECK();
 }
 
-GLint shader_effect::get_param_location(const char * param_name) const
+GLint shader_effect::get_param_location(const char *param_name) const
 {
     GLint loc = glGetUniformLocation(program_id, param_name);
     if (loc < 0) {
@@ -115,11 +112,8 @@ GLuint shader_effect::compile_gl_shader(GLenum shader_type, const char *filename
 
     LOG("GL: Compiling %s: %s\n", get_shader_type_name(shader_type), filename);
     char const *shader_code_c_str = shader_code.c_str();
-    const char* code[] = {
-        "#version " GLSL_VERSION_STRING " core\n",
-        get_shader_type_define(shader_type),
-        defines,
-        shader_code_c_str };
+    const char *code[] = { "#version " GLSL_VERSION_STRING " core\n",
+                           get_shader_type_define(shader_type), defines, shader_code_c_str };
     glShaderSource(shader_id, 4, code, nullptr);
     glCompileShader(shader_id);
 

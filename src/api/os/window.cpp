@@ -2,8 +2,8 @@
 
 #include "imgui_impl_sdl_gl3.h"
 
-#include <util/error.h>
 #include <api/gpu/graphics.h>
+#include <util/error.h>
 
 #define NOMINMAX
 #include <SDL_syswm.h>
@@ -33,22 +33,19 @@ public:
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     };
 
-    ~window_api()
-    {
-        SDL_Quit();
-    }
+    ~window_api() { SDL_Quit(); }
 };
 
 } // namespace detail
 
-window::window(const char *title, const util::extent& window_size, Uint32 sdl_window_flags)
-  : window_handle(nullptr), gl_context(nullptr)
+window::window(const char *title, const util::extent &window_size, Uint32 sdl_window_flags)
+    : window_handle(nullptr), gl_context(nullptr)
 {
     static detail::window_api window_api;
 
-    window_handle = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                     window_size.width, window_size.height,
-                                     SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | sdl_window_flags);
+    window_handle = SDL_CreateWindow(
+        title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_size.width,
+        window_size.height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | sdl_window_flags);
     SDL_CHECK(window_handle != nullptr);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, OPENGL_MAJOR);
@@ -77,32 +74,32 @@ window::~window()
 }
 
 namespace {
-    const char *wm_name(SDL_SYSWM_TYPE type)
-    {
-        switch (type) {
-        case SDL_SYSWM_WINDOWS:
-            return "Microsoft Windows";
-        case SDL_SYSWM_X11:
-            return "X Window System";
-        case SDL_SYSWM_DIRECTFB:
-            return "DirectFB";
-        case SDL_SYSWM_COCOA:
-            return "Apple Mac OS X";
-        case SDL_SYSWM_UIKIT:
-            return "Apple iOS";
-        case SDL_SYSWM_WAYLAND:
-            return "Wayland";
-        case SDL_SYSWM_MIR:
-            return "Mir";
-        case SDL_SYSWM_WINRT:
-            return "WinRT";
-        case SDL_SYSWM_ANDROID:
-            return "Android";
-        case SDL_SYSWM_UNKNOWN:
-        default:
-            return "unknown";
-        }
+const char *wm_name(SDL_SYSWM_TYPE type)
+{
+    switch (type) {
+    case SDL_SYSWM_WINDOWS:
+        return "Microsoft Windows";
+    case SDL_SYSWM_X11:
+        return "X Window System";
+    case SDL_SYSWM_DIRECTFB:
+        return "DirectFB";
+    case SDL_SYSWM_COCOA:
+        return "Apple Mac OS X";
+    case SDL_SYSWM_UIKIT:
+        return "Apple iOS";
+    case SDL_SYSWM_WAYLAND:
+        return "Wayland";
+    case SDL_SYSWM_MIR:
+        return "Mir";
+    case SDL_SYSWM_WINRT:
+        return "WinRT";
+    case SDL_SYSWM_ANDROID:
+        return "Android";
+    case SDL_SYSWM_UNKNOWN:
+    default:
+        return "unknown";
     }
+}
 
 } // unnamed namespace
 
@@ -141,28 +138,25 @@ window::wm_type window::get_wm_type() const
     return WM_TYPE_UNKNOWN;
 }
 
-bool window::poll_event(os::event& event)
+bool window::poll_event(os::event &event)
 {
-    SDL_Event* sdl_event = &event.get_api_event();
+    SDL_Event *sdl_event = &event.get_api_event();
     while (SDL_PollEvent(sdl_event) != 0) {
 
         ImGui_ImplSdlGL3_ProcessEvent(sdl_event);
 
         // Check if it should be passed to the caller.
-        const ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO &io = ImGui::GetIO();
 
-        const bool is_keyboard_event =
-            sdl_event->type == SDL_KEYDOWN ||
-            sdl_event->type == SDL_KEYUP ||
-            sdl_event->type == SDL_TEXTINPUT;
+        const bool is_keyboard_event = sdl_event->type == SDL_KEYDOWN ||
+                                       sdl_event->type == SDL_KEYUP ||
+                                       sdl_event->type == SDL_TEXTINPUT;
         if (io.WantCaptureKeyboard && is_keyboard_event)
             continue;
 
         const bool is_mouse_event =
-            sdl_event->type == SDL_MOUSEMOTION ||
-            sdl_event->type == SDL_MOUSEBUTTONDOWN ||
-            sdl_event->type == SDL_MOUSEBUTTONUP ||
-            sdl_event->type == SDL_MOUSEWHEEL;
+            sdl_event->type == SDL_MOUSEMOTION || sdl_event->type == SDL_MOUSEBUTTONDOWN ||
+            sdl_event->type == SDL_MOUSEBUTTONUP || sdl_event->type == SDL_MOUSEWHEEL;
         if (io.WantCaptureMouse && is_mouse_event)
             continue;
 
@@ -172,10 +166,7 @@ bool window::poll_event(os::event& event)
     return false;
 }
 
-void window::begin_frame()
-{
-    ImGui_ImplSdlGL3_NewFrame(window_handle);
-}
+void window::begin_frame() { ImGui_ImplSdlGL3_NewFrame(window_handle); }
 
 void window::end_frame()
 {

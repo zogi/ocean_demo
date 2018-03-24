@@ -14,7 +14,8 @@ public:
     font(const char *filename, int ptsize);
     ~font();
     int get_lineskip() const { return TTF_FontLineSkip(api_font); }
-    os::surface render_text(const char *text, const color& color);
+    os::surface render_text(const char *text, const color &color);
+
 private:
     TTF_Font *api_font;
 };

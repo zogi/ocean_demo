@@ -9,8 +9,8 @@ class quad {
 public:
     quad();
     ~quad();
-    quad(const quad&) = delete;
-    quad& operator=(const quad&) = delete;
+    quad(const quad &) = delete;
+    quad &operator=(const quad &) = delete;
 
     void draw();
     void draw_patch();

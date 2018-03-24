@@ -10,7 +10,8 @@ public:
     image(const char *filename);
     ~image();
     void copy_pixels(int x_offset, int y_offset, int width, int height, void *destination) const;
-    struct load_error {};
+    struct load_error {
+    };
 
 private:
     ILuint image_handle;

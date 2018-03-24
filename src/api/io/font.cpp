@@ -15,19 +15,12 @@ void ttf_check(bool status, const char *file, int line)
 
 class ttf_api {
 public:
-    ttf_api()
-    {
-        TTF_CHECK(TTF_Init() == 0);
-    };
+    ttf_api() { TTF_CHECK(TTF_Init() == 0); };
 
-    ~ttf_api()
-    {
-        TTF_Quit();
-    }
+    ~ttf_api() { TTF_Quit(); }
 };
 
 } // namespace detail
-
 
 font::font(const char *filename, int ptsize)
 {
@@ -37,12 +30,9 @@ font::font(const char *filename, int ptsize)
     TTF_CHECK(api_font != nullptr);
 }
 
-font::~font()
-{
-    TTF_CloseFont(api_font);
-}
+font::~font() { TTF_CloseFont(api_font); }
 
-os::surface font::render_text(const char *text, const color& color)
+os::surface font::render_text(const char *text, const color &color)
 {
     auto text_surface = TTF_RenderText_Blended(api_font, text, color);
     TTF_CHECK(text_surface != 0);

@@ -3,18 +3,16 @@
 namespace rendering {
 
 namespace {
-    struct vertex {
-        GLfloat pos[3];
-        GLfloat uv[2];
-    };
+struct vertex {
+    GLfloat pos[3];
+    GLfloat uv[2];
+};
 
-    static vertex quad_vertices[] = {
-        { { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f } },
-        { {  0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f } },
-        { { -0.5f,  0.5f, 0.0f }, { 0.0f, 1.0f } },
-        { {  0.5f,  0.5f, 0.0f }, { 1.0f, 1.0f } }
-    };
-}
+static vertex quad_vertices[] = { { { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f } },
+                                  { { 0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f } },
+                                  { { -0.5f, 0.5f, 0.0f }, { 0.0f, 1.0f } },
+                                  { { 0.5f, 0.5f, 0.0f }, { 1.0f, 1.0f } } };
+} // namespace
 
 quad::quad()
 {

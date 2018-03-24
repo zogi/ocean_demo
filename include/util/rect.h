@@ -3,23 +3,23 @@
 
 namespace util {
 
-struct offset
-{
+struct offset {
     offset(int x, int y) : x(x), y(y) {}
     int x;
     int y;
 };
 
-struct extent
-{
+struct extent {
     extent(int width, int height) : width(width), height(height) {}
     int width;
     int height;
 };
 
-struct rect
-{
-    rect(const offset& rect_offset, const extent& rect_extent) : rect_offset(rect_offset), rect_extent(rect_extent) {}
+struct rect {
+    rect(const offset &rect_offset, const extent &rect_extent)
+        : rect_offset(rect_offset), rect_extent(rect_extent)
+    {
+    }
     offset rect_offset;
     extent rect_extent;
 };

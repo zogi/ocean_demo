@@ -15,20 +15,23 @@ namespace scene {
 
 class ocean_scene {
 public:
-    ocean_scene(gpu::compute::command_queue queue, const ocean::surface_params& surface_params, const rendering::rendering_params& rendering_params);
-    ocean_scene(const ocean_scene&) = delete;
-    ocean_scene& operator=(const ocean_scene&) = delete;
+    ocean_scene(
+        gpu::compute::command_queue queue,
+        const ocean::surface_params &surface_params,
+        const rendering::rendering_params &rendering_params);
+    ocean_scene(const ocean_scene &) = delete;
+    ocean_scene &operator=(const ocean_scene &) = delete;
 
     void render();
-    camera& get_main_camera() { return main_camera; }
-    const camera& get_main_camera() const { return main_camera; }
+    camera &get_main_camera() { return main_camera; }
+    const camera &get_main_camera() const { return main_camera; }
 
     struct timing_data {
         double render_milliseconds;
         double ocean_drawcall_milliseconds;
         ocean::surface_geometry::timing_data surface_geometry_timing_data;
     };
-    const timing_data& get_timing_data() const { return timings; }
+    const timing_data &get_timing_data() const { return timings; }
 
 private:
     rendering::rendering_params rendering_params;

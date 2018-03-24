@@ -1,22 +1,22 @@
 #define __STDC_WANT_SECURE_LIB__ 0 // disable VS version of localtime_s
-#define _CRT_SECURE_NO_WARNINGS  1 // suppress VS warning about using localtime
-#define __STDC_WANT_LIB_EXT1__   1 // needed for standard localtime_s
-#include <util/log.h>
+#define _CRT_SECURE_NO_WARNINGS 1 // suppress VS warning about using localtime
+#define __STDC_WANT_LIB_EXT1__ 1 // needed for standard localtime_s
 #include <chrono>
-#include <cstdio>
 #include <cstdarg>
+#include <cstdio>
 #include <ctime>
+#include <util/log.h>
 
 #ifndef __STDC_LIB_EXT1__
 #include <cstring>
 namespace {
-    struct tm *localtime_s(const time_t *time, struct tm *result)
-    {
-        struct tm *tm_data = localtime(time);
-        memcpy(result, tm_data, sizeof(struct tm));
-        return tm_data;
-    }
-} // undefined namespace
+struct tm *localtime_s(const time_t *time, struct tm *result)
+{
+    struct tm *tm_data = localtime(time);
+    memcpy(result, tm_data, sizeof(struct tm));
+    return tm_data;
+}
+} // namespace
 #endif
 
 namespace util {
