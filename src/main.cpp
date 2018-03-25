@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     rendering_params.tile_size_pixels = math::vec2(4, 4);
 
     ocean::surface_params ocean_params;
-    ocean_params.fft_size = math::ivec2(1024, 1024);
+    ocean_params.fft_size = math::ivec2(512, 512);
     ocean_params.tile_size_logical = math::vec3(100, 100, 100); // For rendering.
     ocean_params.tile_size_physical = math::vec3(200, 200, 200); // For heightmap generation.
     ocean_params.amplitude = 2.0;
