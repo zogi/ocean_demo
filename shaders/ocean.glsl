@@ -25,7 +25,7 @@ vec3 get_displacement(vec2 p, vec2 dp_dx, vec2 dp_dy)
 
 // Displacement mapping is only used up to a certain distance. Beyond that a noise-perturbed normal is used.
 // There is smooth transition between the two. The two thresholds of the transition range are define below.
-#define DISPLACEMENT_MAPPING_DISTANCE_MIN 800.0f
+#define DISPLACEMENT_MAPPING_DISTANCE_MIN 100.0f
 #define DISPLACEMENT_MAPPING_DISTANCE_MAX 900.0f
 
 // Camera data
@@ -202,9 +202,9 @@ out vec3 color_out;
 
 uniform sampler2D normal_tex;
 uniform samplerCube sky_env;
-uniform vec3 rf0_water = vec3(0.02f, 0.02f, 0.02f); // Real-Time Rendering 3rd ed. pg. 236
-uniform vec3 diffuse_water = vec3(0.04f, 0.16f, 0.47f);
-uniform vec3 sss_color = vec3(0.01, 0.33, 0.55);
+uniform vec3 rf0_water = vec3(0.02, 0.02, 0.02);
+uniform vec3 diffuse_water = 0.4 * vec3(0.04, 0.16, 0.47);
+uniform vec3 sss_color = 0.6 * vec3(0.01, 0.33, 0.55);
 
 #define PI 3.14159265f
 #define DERIV_EPS 1e-1f
@@ -231,12 +231,16 @@ void main()
     vec3 eye = normalize(camera.model_transform.position - model_pos_gs);
     vec3 reflected_eye = reflect(-eye, normal);
     reflected_eye.y = abs(reflected_eye.y); // Don't sample the sky from below water level.
-    vec3 fres = fresnel_reflectance(rf0_water, normal, eye);
+    vec3 fresnel = fresnel_reflectance(rf0_water, normal, eye);
     // TODO: pre-convolve sky with BRDF
-    vec3 sky = texture(sky_env, reflected_eye, 1.0f).xyz;
+    vec3 sky = texture(sky_env, reflected_eye, 100.0f).xyz;
+
+    vec3 sky_radiance = textureLod(sky_env, reflected_eye, textureQueryLevels(sky_env)).xyz;
     float height = model_pos_gs.y;
     vec3 sss = 0.8 * sss_color * smoothstep(0.0, max_displacement.y, height) * smoothstep(1, 5, length(eye.xz) / eye.y);
-    color_out = sky * fres + (diffuse_water + sss) * (1 - fres);
+    vec3 water = diffuse_water * sky_radiance + sss;
+
+    color_out = sky * fresnel + water * (1 - fresnel);
 }
 
 #endif // FRAGMENT_SHADER
