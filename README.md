@@ -45,7 +45,12 @@ In order to build and run the demo, the following open-source libraries are need
    * SDL2
    * SDL2\_ttf
 
-Currently only Windows and Linux are supported.
+ImGui is also a dependency, but it is included as a submodule.
+Clone with --recursive.
+
+Currently only Windows and Linux are supported (read: developed and tested on a single
+particular windows configuration and run once a couple of years ago on linux with
+another configuration).
 
 ## Binary release
 
