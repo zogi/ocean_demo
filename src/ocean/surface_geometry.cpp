@@ -45,9 +45,10 @@ surface_geometry::shared_texture::shared_texture(
     tex.set_wrap_mode(rendering::texture_2d::WRAP_MODE_REPEAT);
     tex.set_mag_filter(rendering::texture_2d::MAG_FILTER_LINEAR);
     tex.set_min_filter(rendering::texture_2d::MIN_FILTER_MIPMAP);
-    img =
-        gpu::compute::graphics_image(context, CL_MEM_WRITE_ONLY, GL_TEXTURE_2D, 0, tex.get_api_texture());
     tex.generate_mipmap();
+    glFinish();
+    auto gl_tex = tex.get_api_texture();
+    img = gpu::compute::graphics_image(context, CL_MEM_WRITE_ONLY, GL_TEXTURE_2D, 0, gl_tex);
 }
 
 void surface_geometry::enqueue_generate(math::real time, const gpu::compute::event_vector *wait_events)
