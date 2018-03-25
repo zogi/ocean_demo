@@ -204,6 +204,7 @@ uniform sampler2D normal_tex;
 uniform samplerCube sky_env;
 uniform vec3 rf0_water = vec3(0.02f, 0.02f, 0.02f); // Real-Time Rendering 3rd ed. pg. 236
 uniform vec3 diffuse_water = vec3(0.04f, 0.16f, 0.47f);
+uniform vec3 sss_color = vec3(0.01, 0.33, 0.55);
 
 #define PI 3.14159265f
 #define DERIV_EPS 1e-1f
@@ -231,10 +232,11 @@ void main()
     vec3 reflected_eye = reflect(-eye, normal);
     reflected_eye.y = abs(reflected_eye.y); // Don't sample the sky from below water level.
     vec3 fres = fresnel_reflectance(rf0_water, normal, eye);
+    // TODO: pre-convolve sky with BRDF
     vec3 sky = texture(sky_env, reflected_eye, 1.0f).xyz;
-    vec3 sky_radiance = textureLod(sky_env, reflected_eye, textureQueryLevels(sky_env)).xyz;
-    vec3 water = diffuse_water * sky_radiance / PI;
-    color_out = sky * fres + water * (1 - fres);
+    float height = model_pos_gs.y;
+    vec3 sss = 0.8 * sss_color * smoothstep(0.0, max_displacement.y, height) * smoothstep(1, 5, length(eye.xz) / eye.y);
+    color_out = sky * fres + (diffuse_water + sss) * (1 - fres);
 }
 
 #endif // FRAGMENT_SHADER
