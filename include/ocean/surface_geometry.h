@@ -37,8 +37,16 @@ public:
     };
     timing_data get_timing_data() const { return timings; }
 
-    float get_wave_amplitude() const { return wave_spectrum.get_params().amplitude; }
+    float get_wave_amplitude() const { return wave_spectrum.get_amplitude(); }
     void set_wave_amplitude(float a) { wave_spectrum.set_amplitude(a); }
+    math::vec2 get_wind_vector() const { return wave_spectrum.get_wind_vector(); }
+    void set_wind_vector(const glm::vec2 &v)
+    {
+        wave_spectrum.set_wind_vector(v);
+        queue.finish();
+        wave_spectrum.rebuild(queue.getInfo<CL_QUEUE_CONTEXT>());
+        queue.finish();
+    }
 
 private:
     typedef rendering::texture_2d::texture_format texture_format;

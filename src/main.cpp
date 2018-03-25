@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     ocean_params.fft_size = math::ivec2(1024, 1024);
     ocean_params.tile_size_logical = math::vec3(100, 100, 100); // For rendering.
     ocean_params.tile_size_physical = math::vec3(200, 200, 200); // For heightmap generation.
-    ocean_params.amplitude = 1.0e-3;
+    ocean_params.amplitude = 2.0;
     ocean_params.wavelength_low_threshold = math::real(0.7);
     ocean_params.set_wind_vector(math::vec2(15, 0));
 

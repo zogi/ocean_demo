@@ -20,10 +20,18 @@ public:
         gpu::compute::memory_object output_buffer,
         const gpu::compute::event_vector *wait_events = nullptr);
     const surface_params &get_params() const { return params; }
+    float get_amplitude() const { return params.amplitude; }
     void set_amplitude(float amplitude) { params.amplitude = amplitude; }
+    math::vec2 get_wind_vector() const { return params.wind_speed * params.wind_direction; }
+    void set_wind_vector(math::vec2 v)
+    {
+        params.wind_direction = math::normalize(v);
+        params.wind_speed = math::length(v);
+    }
+
+    void rebuild(gpu::compute::context context);
 
 private:
-    void set_initial_spectrum(gpu::compute::context context);
     void load_phase_shift_kernel(gpu::compute::context context);
     math::real phillips_spectrum(int i, int j);
 

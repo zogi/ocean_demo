@@ -46,6 +46,13 @@ private:
 
     util::graphics_timer timer;
     timing_data timings;
+
+    struct GuiState {
+        float amplitude;
+        float wind_speed;
+        float wind_angle_deg;
+    };
+    GuiState gui_state;
 };
 
 } // namespace scene

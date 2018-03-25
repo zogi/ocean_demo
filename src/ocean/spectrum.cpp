@@ -13,7 +13,7 @@ namespace ocean {
 
 spectrum::spectrum(gpu::compute::context context, const surface_params &params) : params(params)
 {
-    set_initial_spectrum(context);
+    rebuild(context);
     load_phase_shift_kernel(context);
 }
 
@@ -23,6 +23,11 @@ gpu::compute::event spectrum::enqueue_generate(
     gpu::compute::memory_object output_buffer,
     const gpu::compute::event_vector *wait_events)
 {
+    phase_shift_kernel.setArg(0, initial_spectrum);
+    phase_shift_kernel.setArg(1, params.tile_size_physical.x);
+    phase_shift_kernel.setArg(2, params.tile_size_physical.z);
+    phase_shift_kernel.setArg(3, params.fft_size.x);
+    phase_shift_kernel.setArg(4, params.fft_size.y);
     phase_shift_kernel.setArg(5, time);
     phase_shift_kernel.setArg(6, params.amplitude);
     phase_shift_kernel.setArg(7, output_buffer);
@@ -36,7 +41,7 @@ gpu::compute::event spectrum::enqueue_generate(
     return event;
 }
 
-void spectrum::set_initial_spectrum(gpu::compute::context context)
+void spectrum::rebuild(gpu::compute::context context)
 {
     int elem_count = (params.fft_size.x / 2 + 1) * params.fft_size.y * 2;
     std::vector<real> data(elem_count);
@@ -48,7 +53,7 @@ void spectrum::set_initial_spectrum(gpu::compute::context context)
     for (int j = 0; j < params.fft_size.y; ++j) {
         for (int i = 0; i <= params.fft_size.x / 2; ++i) {
             real p = phillips_spectrum(i, j);
-            real mag = sqrt(p * real(0.5));
+            real mag = 1e-3f * sqrt(p * real(0.5));
             data[idx++] = mag * dist(gen); // real part
             data[idx++] = mag * dist(gen); // imaginary part
         }
@@ -63,11 +68,6 @@ void spectrum::load_phase_shift_kernel(gpu::compute::context context)
 {
     auto program = gpu::compute::create_program_from_file(context, "kernels/phase_shift.cl");
     phase_shift_kernel = gpu::compute::kernel(program, "phase_shift");
-    phase_shift_kernel.setArg(0, initial_spectrum);
-    phase_shift_kernel.setArg(1, params.tile_size_physical.x);
-    phase_shift_kernel.setArg(2, params.tile_size_physical.z);
-    phase_shift_kernel.setArg(3, params.fft_size.x);
-    phase_shift_kernel.setArg(4, params.fft_size.y);
 }
 
 real spectrum::phillips_spectrum(int i, int j)

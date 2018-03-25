@@ -50,16 +50,34 @@ ocean_scene::ocean_scene(
     sky_effect.set_z_write_state(false);
     sky_effect.use();
     sky_effect.set_parameter("sky_env", sky_cubemap_tex_unit);
+
+    // Initial gui state.
+    {
+        gui_state.amplitude = surface_params.amplitude;
+        gui_state.wind_speed = surface_params.wind_speed;
+        const auto v = surface_params.wind_direction;
+    }
 }
 
 void ocean_scene::render()
 {
-    ImGui::Begin("ocean params");
-    float amplitude = ocean_surface.get_wave_amplitude();
-    ImGui::SliderFloat("amplitude", &amplitude, 0, 10);
-    ocean_surface.set_wave_amplitude(amplitude);
-    ImGui::End();
+    // Gui
+    {
+        ImGui::Begin("ocean params");
 
+        ImGui::SliderFloat("amplitude", &gui_state.amplitude, 0, 5);
+        ocean_surface.set_wave_amplitude(gui_state.amplitude);
+
+        const bool wind_changed = ImGui::SliderFloat("wind speed", &gui_state.wind_speed, 0, 20);
+        if (wind_changed) {
+            math::vec2 v = math::normalize(ocean_surface.get_wind_vector());
+            ocean_surface.set_wind_vector(v * gui_state.wind_speed);
+        }
+
+        ImGui::End();
+    }
+
+    // Scene
     static auto start_time = std::chrono::steady_clock::now();
     auto current_time = std::chrono::steady_clock::now();
     float time =
